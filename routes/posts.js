@@ -1,20 +1,27 @@
-let express = require('express');
-let router = express.Router();
+let express = require('express')
+let router = express.Router()
 let Post = require("../models/post.js")
 
 /* GET users listing. */
 router.get('/', function(req, res, next) { //목록
-   Post.find( { boardId: "free" },
-              {'boardId': 1, 'subject': 1, 'userId': 1, 'created': 1},
+   Post.find(
+              {
+                    boardId: "free"
+                },
+              {
+                    boardId: 1,
+                    subject: 1,
+                    userId: 1,
+                    created: 1
+                }
             )
-        .sort({created: -1})
-        .skip(1)
-        .limit(3)
-        .then(
-        ( ret ) => {
-            res.send( ret )
-        }
-    )
+        .sort({ created: -1 })
+        .skip(0)
+        .limit(5)
+        .then( (ret) => {
+                    res.send(ret)
+                 }
+             )
     /*
     Post.aggregate([
         {'$project': { 'boardId': 1, 'subject': 1, 'userId': 1, 'created': 1 } },
@@ -27,7 +34,7 @@ router.get('/', function(req, res, next) { //목록
         }
     )
     */
-});
+})
 
 router.get('/:id', function(req, res, next) { //게시글
     Post.findById(req.params.id).then(
@@ -35,6 +42,6 @@ router.get('/:id', function(req, res, next) { //게시글
             res.send( ret )
         }
     )
-});
+})
 
-module.exports = router;
+module.exports = router

@@ -6,37 +6,36 @@
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
       </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:afar-backend" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:github" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
     </expand>
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="02582ac3-2144-4bdf-a6cb-cba2f8e6e820" name="Default Changelist" comment="" />
+    <list default="true" id="02582ac3-2144-4bdf-a6cb-cba2f8e6e820" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/connection.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/post.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/posts.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/팁.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/package.json" />
   </component>
   <component name="ProjectId" id="1p9XxVGXfXBNeA2RFRxieEPFqrZ" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -53,9 +52,23 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="javascript.nodejs.core.library.configured.version" value="14.15.4" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/models" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.standard" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.standard" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.standard" value="" />
     <property name="nodejs_interpreter_path" value="node" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="settings.editor.selected.configurable" value="inlay.hints.JavaScript" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\workspace\afar-backend\models" />
+      <recent name="D:\workspace\afar-backend\routes" />
+      <recent name="D:\workspace\afar-backend" />
+    </key>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -67,7 +80,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1614596527158</updated>
-      <workItem from="1614596530894" duration="120000" />
+      <workItem from="1614596530894" duration="2927000" />
     </task>
     <servers />
   </component>
@@ -92,9 +105,21 @@
     </ignored-roots>
   </component>
   <component name="WindowStateProjectService">
-    <state x="461" y="164" key="SettingsEditor" timestamp="1614596651134">
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1614601220172">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1614596651134" />
+    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1614601220172" />
+    <state x="830" y="417" key="Github.ShareDialog" timestamp="1614596697230">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="830" y="417" key="Github.ShareDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1614596697230" />
+    <state x="763" y="221" key="Github.UntrackedFilesDialog" timestamp="1614596705403">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="763" y="221" key="Github.UntrackedFilesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1614596705403" />
+    <state x="922" y="83" width="998" height="708" key="SettingsEditor" timestamp="1614603289305">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="922" y="83" width="998" height="708" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1614603289305" />
   </component>
 </project>

@@ -1,0 +1,28 @@
+<mongoose 설치>
+npm i -S mongoose
+
+<cors>
+정책에 의해 원래는 다른 도메인이나 포트를 가진 서버에서 다른 서버에게 자원을 요청하는 행위가 금지되어있다.
+
+cors는 이것을 가능하게 해준다.
+
+#cd be
+#yarn add cors
+Back-End 서버에서 루트 라우터에 해당하는 be/app.js에 다음과 같이 삽입해준다.
+
+const cors = require('cors') // 상단 아무곳이나 추가
+app.use(cors()) // api 위에서 사용하겠다고 선언
+
+출처: https://velog.io/@woounnan/VUEJS-Vue.js-Express-MongoDB-%EA%B5%AC%EC%B6%95
+
+
+<Auto Start>
+1. nodemon 설치
+npm install nodemon -g
+
+2. express 서버 시작
+nodemon
+
+3. 파일 변경시 자동 리스타트 됨
+
+출처: https://www.digitalocean.com/community/tutorials/workflow-nodemon

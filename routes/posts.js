@@ -3,58 +3,57 @@ let router = express.Router()
 let Post = require("../models/post.js")
 
 /*
-
 페이징: http://localhost:3000/api/posts?boid=free&page=1&limit=10&field=created&desc=true
-포스트: /api/post/?boid=free&100001?page=1&limit=10&field=created&desc=true
-
- */
+포스트: http://localhost:3000/api/post/?boid=free&100001?page=1&limit=10&field=created&desc=true
+*/
 
 /* GET users listing. */
 router.get('/', function(req, res, next) { //목록
 
-    let boardId = req.query.boid
+    console.log("req.query", req.query)
+
     let page = req.query.page * 1
-    let limit = req.query.limit * 1
-    let count = 0
-    let totalPage = 0
-    let skip = 0
+    let limit = req.query.itemsPerPage * 1
 
-    Post.countDocuments(
-            {
-                boardId: boardId
-            }
-        ).then(
-            (count) => {
+    let sort = {}
+    for ( let i = 0; i < req.query.sortBy.length; i++ ) {
+        let field = req.query.sortBy[i]
+        let desc = req.query.sortDesc[i] == "true" ? -1 : 1
+        sort[field] = desc
+    }
 
-                totalPage = parseInt( (count - 1) / limit ) + 1
-                skip = ( page - 1 ) * limit
+    let filter = {}
+    filter["boardId"] = req.query.boid ? req.query.boid : { '$exists': true }
 
-                Post.find(
-                        {
-                            boardId: boardId
-                        },
-                        {
+    Post.countDocuments( filter ).then( (count) => {
+
+        console.log("count", count)
+
+                let totalPage = parseInt( (count - 1) / limit ) + 1
+                let skip = ( page - 1 ) * limit
+
+                Post.find( filter,
+                    {
                             boardId: 1,
                             subject: 1,
                             userId: 1,
                             created: 1
                         }
                     )
-                    .sort({ created: -1 })
+                    .sort(sort)
                     .skip(skip)
                     .limit(limit)
                     .then(
-                        (data) => {
+                        (ret) => {
                             res.send(
                                 {
-                                    meta: {
-                                        page: page,
-                                        totalPage: totalPage,
-                                        totalCount: count,
-                                        skip: skip,
-                                        limit: limit
-                                    },
-                                    data: data
+                                    page: page,
+                                    totalPage: totalPage,
+                                    totalCount: count,
+                                    sort: sort,
+                                    skip: skip,
+                                    limit: limit,
+                                    items: ret
                                 }
                             )
                         }
@@ -62,56 +61,5 @@ router.get('/', function(req, res, next) { //목록
             }
         )
 })
-/*
-    let totalPage = parseInt( (count - 1) / limit ) + 1
-    let skip = ( page - 1 ) * limit
 
-    Post.find(
-        {
-            boardId: boardId
-        },
-    {
-            boardId: 1,
-            subject: 1,
-            userId: 1,
-            created: 1
-        }
-    )
-    .sort({ created: -1 })
-    .skip(skip)
-    .limit(limit)
-    .then(
-        (ret) => {
-            res.send(
-                {
-                    totalCount: count,
-                    totalPage: totalPage,
-                    data: ret
-                }
-            )
-        }
-     )
-    /-*
-    Post.aggregate([
-        {'$project': { 'boardId': 1, 'subject': 1, 'userId': 1, 'created': 1 } },
-        {'$match': { 'boardId': 'free' } },
-        {'$skip': 1},
-        {'$limit': 3}
-    ]).then(
-        ( ret ) => {
-            res.send( ret )
-        }
-    )
-    *-/
-})
-
-router.get('/:id', function(req, res, next) { //게시글
-    Post.findById(req.params.id).then(
-        ( ret ) => {
-            res.send( ret )
-        }
-    )
-})
-
-*/
 module.exports = router

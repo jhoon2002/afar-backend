@@ -12,7 +12,11 @@
   <component name="ChangeListManager">
     <list default="true" id="02582ac3-2144-4bdf-a6cb-cba2f8e6e820" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/connection.js" beforeDir="false" afterPath="$PROJECT_DIR$/connection.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/posts.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/posts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/팁.txt" beforeDir="false" afterPath="$PROJECT_DIR$/팁.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,8 +49,8 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="javascript.nodejs.core.library.configured.version" value="14.15.4" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/models" />
+    <property name="javascript.nodejs.core.library.configured.version" value="12.17.0" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../jeongok-front" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -77,6 +81,7 @@
       <workItem from="1614596530894" duration="2927000" />
       <workItem from="1614603395070" duration="187000" />
       <workItem from="1614603739332" duration="2091000" />
+      <workItem from="1614640730091" duration="10953000" />
     </task>
     <task id="LOCAL-00001" summary="notebook">
       <created>1614603444755</created>
@@ -112,10 +117,10 @@
     <option name="LAST_COMMIT_MESSAGE" value="notebook" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1614601220172">
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1614642413684">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1614601220172" />
+    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1614642413684" />
     <state x="830" y="417" key="Github.ShareDialog" timestamp="1614596697230">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -132,5 +137,9 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1614603449551" />
+    <state x="340" y="230" width="672" height="678" key="search.everywhere.popup" timestamp="1614663342347">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="340" y="230" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1614663342347" />
   </component>
 </project>

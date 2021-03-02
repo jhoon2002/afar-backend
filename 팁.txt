@@ -1,6 +1,17 @@
 <mongoose 설치>
 npm i -S mongoose
 
+단,
+    DeprecationWarning:
+    Listening to events on the Db class
+    has been deprecated and will be removed
+    in the next major version
+이런 메세지를 피하려면
+아래 버전으로 설치해야 함
+(2021.3.2. 현재 5.11.18)
+
+npm i -S mongoose@5.11.15
+
 <cors>
 정책에 의해 원래는 다른 도메인이나 포트를 가진 서버에서 다른 서버에게 자원을 요청하는 행위가 금지되어있다.
 

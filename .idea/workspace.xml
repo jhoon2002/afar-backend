@@ -11,8 +11,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02582ac3-2144-4bdf-a6cb-cba2f8e6e820" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/models/employee.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routes/posts_backup.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/posts.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/posts.js" afterDir="false" />
     </list>
@@ -58,6 +56,7 @@
     <property name="nodejs_interpreter_path" value="node" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="inlay.hints.JavaScript" />
+    <property name="ts.external.directory.path" value="X:\Intellij\IntelliJ IDEA 2020.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -80,6 +79,7 @@
       <workItem from="1614603395070" duration="187000" />
       <workItem from="1614603739332" duration="2091000" />
       <workItem from="1614640730091" duration="10953000" />
+      <workItem from="1614831428310" duration="4263000" />
     </task>
     <task id="LOCAL-00001" summary="notebook">
       <created>1614603444755</created>

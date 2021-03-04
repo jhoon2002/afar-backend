@@ -11,6 +11,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02582ac3-2144-4bdf-a6cb-cba2f8e6e820" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/posts.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/posts.js" afterDir="false" />
     </list>
@@ -43,19 +44,24 @@
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="javascript.nodejs.core.library.configured.version" value="12.17.0" />
+    <property name="javascript.nodejs.core.library.configured.version" value="14.15.0" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/routes" />
     <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.jscs" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.jscs" value="project" />
     <property name="node.js.path.for.package.standard" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.jscs" value="" />
     <property name="node.js.selected.package.standard" value="" />
     <property name="nodejs_interpreter_path" value="node" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="inlay.hints.JavaScript" />
+    <property name="run.prettier.on.save" value="true" />
+    <property name="settings.editor.selected.configurable" value="settings.javascript.prettier" />
     <property name="ts.external.directory.path" value="X:\Intellij\IntelliJ IDEA 2020.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
@@ -80,6 +86,7 @@
       <workItem from="1614603739332" duration="2091000" />
       <workItem from="1614640730091" duration="10953000" />
       <workItem from="1614831428310" duration="4263000" />
+      <workItem from="1614864627577" duration="6443000" />
     </task>
     <task id="LOCAL-00001" summary="notebook">
       <created>1614603444755</created>
@@ -122,6 +129,10 @@
     <option name="LAST_COMMIT_MESSAGE" value="notebook" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="720" y="228" key="#HTTP_Proxy" timestamp="1614864701175">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="720" y="228" key="#HTTP_Proxy/0.0.1920.1040@0.0.1920.1040" timestamp="1614864701174" />
     <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1614642413684">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -134,10 +145,14 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="763" y="221" key="Github.UntrackedFilesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1614596705403" />
-    <state x="922" y="83" width="998" height="708" key="SettingsEditor" timestamp="1614603289305">
+    <state x="759" y="221" key="RollbackChangesDialog" timestamp="1614854401357">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="922" y="83" width="998" height="708" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1614603289305" />
+    <state x="759" y="221" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1614854401357" />
+    <state x="444" y="157" width="998" height="708" key="SettingsEditor" timestamp="1614865940048">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="444" y="157" width="998" height="708" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1614865940048" />
     <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1614697911786">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -146,9 +161,13 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1614770993698" />
-    <state x="340" y="230" width="672" height="678" key="search.everywhere.popup" timestamp="1614663342347">
+    <state x="666" y="307" key="git4idea.merge.GitPullDialog" timestamp="1614854408713">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="340" y="230" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1614663342347" />
+    <state x="666" y="307" key="git4idea.merge.GitPullDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1614854408713" />
+    <state x="340" y="230" width="672" height="678" key="search.everywhere.popup" timestamp="1614854534532">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="340" y="230" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1614854534532" />
   </component>
 </project>

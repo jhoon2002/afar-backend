@@ -7,33 +7,32 @@ let Employee = require("../models/employee.js")
 페이징: /api/posts?page=1&itemsPerPage=10&sortBy[]=created&sortDesc[]=true&mustSort=false&multiSort=false
 */
 
-async function countAll(filter) {
+async function count(filter) {
     return await Post.countDocuments(filter).exec()
 }
 
-async function find(sort, skip, limit) {
-    return await Post.find(filter,
-            {
-                boardId: 1,
-                subject: 1,
-                userId: 1,
-                created: 1
-            }
-        )
+async function find(filter, sort, skip, limit) {
+    return await Post.find(filter, {
+        boardId: 1,
+        subject: 1,
+        userId: 1,
+        created: 1
+    })
         .sort(sort)
         .skip(skip)
         .limit(limit)
         .exec()
 }
 
-async function getNames(set) {
-    return await Employee.find(
-        { userId: { $in: Array.from(set) } },
-        { userId: 1, name: 1}
-        ).exec()
+async function nameDocs(set) {
+    return await Employee.find({
+            userId: {$in: Array.from(set)}
+        },
+        {userId: 1, name: 1}
+    ).exec()
 }
 
-async function getAlldata(req) {
+async function getPosts(req) {
 
     let page = req.query.page * 1
     let limit = req.query.itemsPerPage * 1
@@ -41,7 +40,7 @@ async function getAlldata(req) {
     let sort = {}
     if (req.query.sortBy) {
         for (let [index, value] of req.query.sortBy.entries()) {
-            if (index == 0) sort = {}
+            // if (index == 0) sort = {}
             let field = value
             let desc = req.query.sortDesc[index] == "true" ? -1 : 1
             sort[field] = desc
@@ -49,21 +48,21 @@ async function getAlldata(req) {
     }
 
     let filter = {}
-    filter["boardId"] = req.query.boid ? req.query.boid : { '$exists': true }
+    filter["boardId"] = req.query.boid ? req.query.boid : {'$exists': true}
 
-    let cnt = await countAll(filter)
+    let cnt = await count(filter)
 
-    let totalPage = parseInt( (cnt - 1) / limit ) + 1
-    let skip = ( page - 1 ) * limit
+    let totalPage = parseInt((cnt - 1) / limit) + 1
+    let skip = (page - 1) * limit
 
-    let ret = await find(sort, skip, limit)
+    let ret = await find(filter, sort, skip, limit)
 
     let set = new Set()
-    for ( let item of ret ) {
+    for (let item of ret) {
         set.add(item.userId)
     }
 
-    let arr = await getNames(set)
+    let arr = await nameDocs(set)
     let names = {}
     for (let d of arr) {
         names[d.userId] = d.name
@@ -72,6 +71,7 @@ async function getAlldata(req) {
     return {
         page: page,
         totalPage: totalPage,
+        totalCount: cnt,
         sort: sort,
         skip: skip,
         limit: limit,
@@ -80,10 +80,21 @@ async function getAlldata(req) {
     }
 }
 
-router.get('/', function (req, res, next) { //목록
+async function getPost(id) {
+    console.log(id)
+    return await Post.findById("ffcf17001d28ab459a").exec()
+}
 
-    getAlldata(req).then( res.send )
-
+router.get('/', function (req, res) {
+    getPosts(req).then(ret => res.send(ret)).catch(console.log)
 })
 
+router.get('/:id', function (req, res) {
+    Post.find({_id: "603f5effcf17001d28ab459a"}).then(
+        ret => {
+            console.log(ret)
+            res.send(ret)
+        }).catch(console.log)
+    // console.log(req.params.id)
+})
 module.exports = router

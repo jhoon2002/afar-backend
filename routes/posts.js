@@ -81,8 +81,7 @@ async function getPosts(req) {
 }
 
 async function getPost(id) {
-    console.log(id)
-    return await Post.findById("ffcf17001d28ab459a").exec()
+    return await Post.findById(id).exec()
 }
 
 router.get('/', function (req, res) {
@@ -90,11 +89,14 @@ router.get('/', function (req, res) {
 })
 
 router.get('/:id', function (req, res) {
-    Post.find({_id: "603f5effcf17001d28ab459a"}).then(
-        ret => {
-            console.log(ret)
-            res.send(ret)
-        }).catch(console.log)
-    // console.log(req.params.id)
+    getPost(req.params.id).then(ret => res.send(ret)).catch(console.log)
 })
+
+/* 경과시간 측정
+let startTime = new Date().getMilliseconds()
+    .finally( () => {
+        let endTime = new Date().getMilliseconds()
+        console.log("경과시간(ms)", endTime - startTime)
+    })
+ */
 module.exports = router

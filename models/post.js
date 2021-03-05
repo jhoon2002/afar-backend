@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var postSchema = new Schema({
-    _id: String,
+    _id: mongoose.Schema.Types.ObjectId,
     boardId: String,
     userId: String,
     subject: String,

@@ -9,7 +9,7 @@ let postSchema = new Schema({
     content: String,
     fixed: Boolean,
     created: { type:Date, default:Date.now },
-    updated: { type:Date, default:Date.now },
+    updated: { type:Date },
     commentCount: Number,
     comments: Array,
 })

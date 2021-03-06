@@ -1,4 +1,5 @@
 let express = require('express')
+let mongoose = require('mongoose')
 let router = express.Router()
 let Post = require("../models/post.js")
 let Employee = require("../models/employee.js")
@@ -110,8 +111,14 @@ async function namesMap(set) {
     return map
 }
 
-async function getName(userId) {
-    return await Employee.find({_id: userId}, {name: 1}).exec()
+async function savePost(params) {
+    return await Post.create({
+        _id: new mongoose.Types.ObjectId(),
+        boardId: "free",
+        userId: "jhoon",
+        subject: "테슬라 주가 600달러 붕괴..고점 찍고 5주 새 300조원 증발",
+        content: "미국 전기자동차 업체 테슬라 주가가 고꾸라지며 3개월여 만에 600달러 아래로 내려왔다. 테슬라는 5일(현지시간) 미국 뉴욕 증시에서 3.78% 하락한 597.95달러로 장을 마쳤다.",
+    })
 }
 
 router.get('/', function (req, res) {
@@ -120,6 +127,14 @@ router.get('/', function (req, res) {
 
 router.get('/:id', function (req, res) {
     getPost(req.params.id).then(ret => res.send(ret)).catch(console.log)
+})
+
+router.post("/", function(req, res) {
+    let post = req.body
+    post._id = new mongoose.Types.ObjectId()
+    Post.create(post).then(ret => {
+        res.send(ret)
+    }).catch(console.log)
 })
 
 /* 경과시간 측정

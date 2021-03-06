@@ -16,7 +16,8 @@ async function find(filter, sort, skip, limit) {
         boardId: 1,
         subject: 1,
         userId: 1,
-        created: 1
+        created: 1,
+        commentCount: 1
     })
         .sort(sort)
         .skip(skip)
@@ -57,16 +58,9 @@ async function getPosts(req) {
 
     let ret = await find(filter, sort, skip, limit)
 
-    let set = new Set()
-    for (let item of ret) {
-        set.add(item.userId)
-    }
+    let userIdSet = loopAndFindUserIdInPosts(ret, new Set())
 
-    let arr = await nameDocs(set)
-    let names = {}
-    for (let d of arr) {
-        names[d.userId] = d.name
-    }
+    let names = await namesMap(userIdSet)
 
     return {
         page: page,
@@ -81,7 +75,43 @@ async function getPosts(req) {
 }
 
 async function getPost(id) {
-    return await Post.findById(id).exec()
+    let ret = await Post.findById(id).exec()
+    let userIdSet = loopAndFindUserIdInPost(ret, new Set())
+    let names = await namesMap(userIdSet)
+    return {
+        item: ret,
+        names: names
+    }
+}
+
+function loopAndFindUserIdInPosts(obj, set) {
+    for (let item of obj) {
+        set.add(item.userId)
+    }
+    return set
+}
+
+function loopAndFindUserIdInPost(obj, set) {
+    set.add(obj.userId)
+    if (obj.comments && obj.comments.length > 0) {
+        for (let item of obj.comments) {
+            loopAndFindUserIdInPost(item, set)
+        }
+    }
+    return set
+}
+
+async function namesMap(set) {
+    let arr = await nameDocs(set)
+    let map = {}
+    for (let item of arr) {
+        map[item.userId] = item.name
+    }
+    return map
+}
+
+async function getName(userId) {
+    return await Employee.find({_id: userId}, {name: 1}).exec()
 }
 
 router.get('/', function (req, res) {

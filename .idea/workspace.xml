@@ -12,7 +12,6 @@
   <component name="ChangeListManager">
     <list default="true" id="02582ac3-2144-4bdf-a6cb-cba2f8e6e820" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/post.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/post.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/posts.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/posts.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -61,8 +60,8 @@
     <property name="nodejs_interpreter_path" value="node" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.prettier.on.save" value="true" />
-    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
-    <property name="ts.external.directory.path" value="X:\Intellij\IntelliJ IDEA 2020.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2020.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -91,6 +90,9 @@
       <workItem from="1614990112650" duration="5704000" />
       <workItem from="1614999822820" duration="28000" />
       <workItem from="1614999866977" duration="744000" />
+      <workItem from="1615034877270" duration="60000" />
+      <workItem from="1615034951994" duration="44000" />
+      <workItem from="1615035011337" duration="10587000" />
     </task>
     <task id="LOCAL-00001" summary="notebook">
       <created>1614603444755</created>
@@ -160,18 +162,18 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="759" y="221" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1614854401357" />
-    <state x="444" y="157" width="998" height="708" key="SettingsEditor" timestamp="1615004561036">
+    <state x="444" y="157" width="998" height="708" key="SettingsEditor" timestamp="1615034996992">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="444" y="157" width="998" height="708" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1615004561036" />
+    <state x="444" y="157" width="998" height="708" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1615034996992" />
     <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1615004478283">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1615004478283" />
-    <state x="765" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1614993402817">
+    <state x="765" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1615079352301">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="765" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1614993402817" />
+    <state x="765" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1615079352301" />
     <state x="666" y="307" key="git4idea.merge.GitPullDialog" timestamp="1615008118672">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

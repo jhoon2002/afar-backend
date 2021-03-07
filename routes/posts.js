@@ -33,6 +33,108 @@ async function nameDocs(set) {
         {userId: 1, name: 1}
     ).exec()
 }
+/* 참고자료
+var query = Model.find();
+
+var filters = [
+    {fieldName: "year", value: "2014"},
+    {fieldName: "cat", value: "sonny"}
+    ...
+];
+
+for (var i = 0; i < filters.length; i++) {
+    query.where(filters[i].fieldName).equals(filters[i].value)
+}
+
+query.exec(callback);
+ */
+function getQuery(boardId) {
+
+    let filter = {}
+    //filter["boardId"] = req.query.boid ? req.query.boid : {'$exists': true}
+    if (boardId) {
+        filter["boardId"] = boardId
+    }
+
+    return Post.find(filter)
+
+}
+
+function getCountQuery(boardId) {
+    let filter ={}
+    if (boardId) {
+        filter["boardId"] = boardId
+    }
+    return Post.countDocuments(filter)
+}
+
+function search(q, field, word) {
+    let or = {}
+    let arr = field.split("+")
+    for (let item of arr) {
+        or[item] = new RegExp(word, 'i')
+    }
+    console.log("or", or)
+    return q.or(or)
+}
+
+function sort(q, fields, desc) {
+    let sort = {}
+    for (let [index, field] of fields.entries()) {
+        sort[field] = desc[index] == "true" ? -1 : 1
+    }
+    return q.sort(sort)
+    // return await Post.find
+}
+
+async function all(req, res) {
+
+    //Query 생성
+    let qCnt = getCountQuery(req.query.boid)
+    let q = getQuery(req.query.boid)
+
+    //add search
+    if (req.query.searchField && req.query.searchWord) {
+        qCnt = search(qCnt, req.query.searchField, req.query.searchWord)
+        q = search(q, req.query.searchField, req.query.searchWord)
+    }
+
+    //Query #1(count) 실행
+    let cnt = await qCnt.exec()
+    
+    //변수 계산
+    let page = req.query.page * 1
+    let limit = req.query.itemsPerPage * 1
+    let skip = (page - 1) * limit
+    let totalPage = parseInt((cnt - 1) / limit) + 1
+
+    //add sort
+    if (req.sortBy) {
+        q = sort(q, req.query.sortBy, req.query.sortDesc)
+    }
+
+    //add skip
+    q.skip(skip)
+
+    //add limit
+    q.limit(limit)
+
+    //Query #2(find) 실행
+    let ret = await q.exec()
+
+    let userIdSet = loopAndFindUserIdInPosts(ret, new Set())
+    let names = await namesMap(userIdSet)
+
+    return {
+        page: page,
+        totalPage: totalPage,
+        totalCount: cnt,
+        skip: skip,
+        limit: limit,
+        items: ret,
+        names: names
+    }
+}
 
 async function getPosts(req) {
 
@@ -49,8 +151,19 @@ async function getPosts(req) {
         }
     }
 
+    //filter
     let filter = {}
-    filter["boardId"] = req.query.boid ? req.query.boid : {'$exists': true}
+    //filter["boardId"] = req.query.boid ? req.query.boid : {'$exists': true}
+    if (req.query.boid) {
+        filter["boardId"] = req.query.boid
+    }
+    if (req.query.searchField && req.query.searchWord) {
+        let arr = req.query.searchField.split("+")
+        for (let item of arr) {
+            filter[item] = new RegExp(req.query.searchWord, 'i')
+        }
+    }
+    console.log(filter)
 
     let cnt = await count(filter)
 
@@ -111,25 +224,16 @@ async function namesMap(set) {
     return map
 }
 
-async function savePost(params) {
-    return await Post.create({
-        _id: new mongoose.Types.ObjectId(),
-        boardId: "free",
-        userId: "jhoon",
-        subject: "테슬라 주가 600달러 붕괴..고점 찍고 5주 새 300조원 증발",
-        content: "미국 전기자동차 업체 테슬라 주가가 고꾸라지며 3개월여 만에 600달러 아래로 내려왔다. 테슬라는 5일(현지시간) 미국 뉴욕 증시에서 3.78% 하락한 597.95달러로 장을 마쳤다.",
-    })
-}
-
 router.get('/', function (req, res) {
-    getPosts(req).then(ret => res.send(ret)).catch(console.log)
+    // getPosts(req).then(ret => res.send(ret)).catch(console.log)
+    all(req).then(ret => res.send(ret)).catch(console.log)
 })
 
 router.get('/:id', function (req, res) {
     getPost(req.params.id).then(ret => res.send(ret)).catch(console.log)
 })
 
-router.post("/", function(req, res) {
+router.post("/", function (req, res) {
     let post = req.body
     post._id = new mongoose.Types.ObjectId()
     Post.create(post).then(ret => {

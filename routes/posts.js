@@ -68,39 +68,44 @@ function getCountQuery(boardId) {
     return Post.countDocuments(filter)
 }
 
-function search(q, field, word) {
-    let or = {}
+function search(query, field, word, and) {
+    let objs = []
     let arr = field.split("+")
     for (let item of arr) {
-        or[item] = new RegExp(word, 'i')
+        let obj = {}
+        obj[item] = new RegExp(word, 'i')
+        objs.push(obj)
     }
-    console.log("or", or)
-    return q.or(or)
+
+    if (and) return query.and(objs)
+    return query.or(objs)
 }
 
-function sort(q, fields, desc) {
+function sort(query, fields, desc) {
     let sort = {}
     for (let [index, field] of fields.entries()) {
         sort[field] = desc[index] == "true" ? -1 : 1
     }
-    return q.sort(sort)
-    // return await Post.find
+    return query.sort(sort)
 }
 
 async function all(req, res) {
 
     //Query 생성
-    let qCnt = getCountQuery(req.query.boid)
-    let q = getQuery(req.query.boid)
+    let CountQuery = getCountQuery(req.query.boid)
+    let findQuery = getQuery(req.query.boid)
 
     //add search
     if (req.query.searchField && req.query.searchWord) {
-        qCnt = search(qCnt, req.query.searchField, req.query.searchWord)
-        q = search(q, req.query.searchField, req.query.searchWord)
+        let and = req.query.and == "true" ? true : false
+        CountQuery = search(CountQuery, req.query.searchField, req.query.searchWord, and)
+        findQuery = search(findQuery, req.query.searchField, req.query.searchWord, and)
     }
 
+    //console.log(CountQuery)
+
     //Query #1(count) 실행
-    let cnt = await qCnt.exec()
+    let cnt = await CountQuery.exec()
     
     //변수 계산
     let page = req.query.page * 1
@@ -110,17 +115,17 @@ async function all(req, res) {
 
     //add sort
     if (req.sortBy) {
-        q = sort(q, req.query.sortBy, req.query.sortDesc)
+        findQuery = sort(q, req.query.sortBy, req.query.sortDesc)
     }
 
     //add skip
-    q.skip(skip)
+    findQuery.skip(skip)
 
     //add limit
-    q.limit(limit)
+    findQuery.limit(limit)
 
     //Query #2(find) 실행
-    let ret = await q.exec()
+    let ret = await findQuery.exec()
 
     let userIdSet = loopAndFindUserIdInPosts(ret, new Set())
     let names = await namesMap(userIdSet)
@@ -226,7 +231,23 @@ async function namesMap(set) {
 
 router.get('/', function (req, res) {
     // getPosts(req).then(ret => res.send(ret)).catch(console.log)
+
+    let p = {
+        boardId: req.query.boid,            //String
+        page: req.query.page,               //Number
+        limit: req.query.itemsPerPage,      //Number
+        sort: {
+            fields: req.query.sortBy,         //Array
+            desc: req.query.desc              //Boolean
+        },
+        search: {
+            fields: req.query.search,
+        }
+
+    }
+
     all(req).then(ret => res.send(ret)).catch(console.log)
+    // Post.count.
 })
 
 router.get('/:id', function (req, res) {
@@ -249,3 +270,15 @@ let startTime = new Date().getMilliseconds()
     })
  */
 module.exports = router
+
+/*
+조회, 검색 컨벤션
+
+===== FRONT (vuetify) ====
+<Parameter>
+페이지:               page         Number
+페이지 당 목록 수:     itemPerPage  Number
+정렬 필드:            sortBy       Array
+정렬 방식:            sortDesc     Array
+검색 필드:            필드명
+ */

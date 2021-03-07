@@ -5,9 +5,6 @@ let Post = require("../models/post.js")
 let Employee = require("../models/employee.js")
 
 /*
-페이징: /api/posts?page=1&itemsPerPage=10&sortBy[]=created&sortDesc[]=true&mustSort=false&multiSort=false
-*/
-
 async function count(filter) {
     return await Post.countDocuments(filter).exec()
 }
@@ -33,6 +30,8 @@ async function nameDocs(set) {
         {userId: 1, name: 1}
     ).exec()
 }
+*/
+
 /* 참고자료
 var query = Model.find();
 
@@ -47,7 +46,9 @@ for (var i = 0; i < filters.length; i++) {
 }
 
 query.exec(callback);
- */
+*/
+
+/*
 function getQuery(boardId) {
 
     let filter = {}
@@ -59,7 +60,6 @@ function getQuery(boardId) {
     return Post.find(filter)
 
 }
-
 function getCountQuery(boardId) {
     let filter ={}
     if (boardId) {
@@ -67,7 +67,6 @@ function getCountQuery(boardId) {
     }
     return Post.countDocuments(filter)
 }
-
 function search(query, field, word, and) {
     let objs = []
     let arr = field.split("+")
@@ -80,7 +79,6 @@ function search(query, field, word, and) {
     if (and) return query.and(objs)
     return query.or(objs)
 }
-
 function sort(query, fields, desc) {
     let sort = {}
     for (let [index, field] of fields.entries()) {
@@ -88,7 +86,6 @@ function sort(query, fields, desc) {
     }
     return query.sort(sort)
 }
-
 async function all(req, res) {
 
     //Query 생성
@@ -140,7 +137,6 @@ async function all(req, res) {
         names: names
     }
 }
-
 async function getPosts(req) {
 
     let page = req.query.page * 1
@@ -192,7 +188,6 @@ async function getPosts(req) {
         names: names
     }
 }
-
 async function getPost(id) {
     let ret = await Post.findById(id).exec()
     let userIdSet = loopAndFindUserIdInPost(ret, new Set())
@@ -202,14 +197,12 @@ async function getPost(id) {
         names: names
     }
 }
-
 function loopAndFindUserIdInPosts(obj, set) {
     for (let item of obj) {
         set.add(item.userId)
     }
     return set
 }
-
 function loopAndFindUserIdInPost(obj, set) {
     set.add(obj.userId)
     if (obj.comments && obj.comments.length > 0) {
@@ -219,7 +212,6 @@ function loopAndFindUserIdInPost(obj, set) {
     }
     return set
 }
-
 async function namesMap(set) {
     let arr = await nameDocs(set)
     let map = {}
@@ -228,26 +220,87 @@ async function namesMap(set) {
     }
     return map
 }
+*/
 
-router.get('/', function (req, res) {
-    // getPosts(req).then(ret => res.send(ret)).catch(console.log)
+function toPayload(queryStringObj) {
 
-    let p = {
-        boardId: req.query.boid,            //String
-        page: req.query.page,               //Number
-        limit: req.query.itemsPerPage,      //Number
-        sort: {
-            fields: req.query.sortBy,         //Array
-            desc: req.query.desc              //Boolean
-        },
-        search: {
-            fields: req.query.search,
+    let qso = queryStringObj
+    //filter: Obj
+    let filter = qso.boardId ? { boardId: qso.boardId } : {}
+
+    //searcher: Array
+    let searcher = []
+
+    let io = qso.search
+    for (let key in io) {
+        if (io[key]) {
+            let obj = {}
+            obj[key] = new RegExp(io[key], 'i')
+            searcher.push(obj)
         }
+    }
+    //sorter: Obj
+    let sorter = {}
 
+    let fields = qso.sort.fields
+
+    let descs = qso.sort.descs
+
+    for (let [index, field] of fields.entries()) {
+        sorter[field] = descs[index] == "true" ? -1 : 1
     }
 
-    all(req).then(ret => res.send(ret)).catch(console.log)
-    // Post.count.
+    return {
+        skip: (qso.page - 1) * qso.limit,
+        limit: qso.limit * 1,
+        filter: filter,
+        searcher: searcher,
+        sorter: sorter,
+        and: qso.and
+    }
+
+}
+
+async function getPosts(payload) {
+    let count = await Post.countByPayload(payload)
+    let ret = await Post.findByPayload(payload)
+
+    return {
+        totalPages: parseInt((count - 1) / payload.limit) + 1,
+        count: count,
+        items: ret
+    }
+}
+
+router.get('/', function (req, res) {
+
+    let payload = toPayload({
+        page: req.query.page,
+        limit: req.query.itemsPerPage,
+        boardId: req.query["search.boardId"], //이 라인을 search: 으로 이동시키면 front에서 게시판 명을 검색 옵션으로 사용 가능할 듯
+        sort: {
+            fields: req.query.sortBy,
+            descs: req.query.sortDesc
+        },
+        search: { //검색에 사용할 필드만 명시
+            _id: req.query["search._id"],
+            userId: req.query["search.userId"],
+            subject: req.query["search.subject"],
+            content: req.query["search.content"],
+        },
+        and: req.query.and
+    })
+
+    console.log(req.query.sortBy)
+    console.log(payload.searcher)
+
+    // all(req).then(ret => res.send(ret)).catch(console.log)
+
+    getPosts(payload).then(ret => {
+        // console.log(ret)
+        res.send(ret)
+    }).catch(console.log)
+
 })
 
 router.get('/:id', function (req, res) {
@@ -274,11 +327,29 @@ module.exports = router
 /*
 조회, 검색 컨벤션
 
-===== FRONT (vuetify) ====
+===== FRONT (주로 vuetify 체계에 따름) ====
 <Parameter>
-페이지:               page         Number
-페이지 당 목록 수:     itemPerPage  Number
-정렬 필드:            sortBy       Array
-정렬 방식:            sortDesc     Array
-검색 필드:            필드명
+-------------------------------------------------
+명칭                Parameter 속성  실제 속성
+-------------------------------------------------
+페이지:               page           Number
+페이지 당 목록 수:     itemPerPage    Number
+정렬 필드:            sortBy         Array
+    방식:            sortDesc       Boolean
+그룹 필드:            groupBy        Array
+    정렬 방식:        groupDesc      Boolean
+멀티 정렬:            multiSort      Boolean
+Must Sort:           mustSort       Boolean
+  * 이상 vuetify에서 사용되는 파라메터로서, 이를 수용하여 이 명칭 및 체계에 따름
+  * 멀티 정렬의 경우 multiSort 값에 상관없이 sortBy 값이 배열인지 여부에 따라 적용(2021-03-07 현재)
+  * 그룹 필드는 아직 사례가 없어 반영 안함(2021-03-07 현재)
+
+검색:                item.필드명      String
+                       .....
+    -----------------------------------------------------
+    예)검색
+     item.subject=국민&item.content=바다&item.name=여종훈
+    -----------------------------------------------------
+
+검색 조건:            and          Boolean
  */

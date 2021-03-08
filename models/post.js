@@ -24,8 +24,8 @@ postSchema.statics.findByPayload = function(payload) {
         }
     }
     query.sort(payload.sorter)
-    query.skip(payload.skip)
-    query.limit(payload.limit)
+    query.skip(payload.pager.skip)
+    query.limit(payload.pager.limit)
     return query.exec()
 }
 

@@ -4,233 +4,15 @@ let router = express.Router()
 let Post = require("../models/post.js")
 let Employee = require("../models/employee.js")
 
-/*
-async function count(filter) {
-    return await Post.countDocuments(filter).exec()
-}
-
-async function find(filter, sort, skip, limit) {
-    return await Post.find(filter, {
-        boardId: 1,
-        subject: 1,
-        userId: 1,
-        created: 1,
-        commentCount: 1
-    })
-        .sort(sort)
-        .skip(skip)
-        .limit(limit)
-        .exec()
-}
-
-async function nameDocs(set) {
-    return await Employee.find({
-            userId: {$in: Array.from(set)}
-        },
-        {userId: 1, name: 1}
-    ).exec()
-}
-*/
-
-/* 참고자료
-var query = Model.find();
-
-var filters = [
-    {fieldName: "year", value: "2014"},
-    {fieldName: "cat", value: "sonny"}
-    ...
-];
-
-for (var i = 0; i < filters.length; i++) {
-    query.where(filters[i].fieldName).equals(filters[i].value)
-}
-
-query.exec(callback);
-*/
-
-/*
-function getQuery(boardId) {
-
-    let filter = {}
-    //filter["boardId"] = req.query.boid ? req.query.boid : {'$exists': true}
-    if (boardId) {
-        filter["boardId"] = boardId
-    }
-
-    return Post.find(filter)
-
-}
-function getCountQuery(boardId) {
-    let filter ={}
-    if (boardId) {
-        filter["boardId"] = boardId
-    }
-    return Post.countDocuments(filter)
-}
-function search(query, field, word, and) {
-    let objs = []
-    let arr = field.split("+")
-    for (let item of arr) {
-        let obj = {}
-        obj[item] = new RegExp(word, 'i')
-        objs.push(obj)
-    }
-
-    if (and) return query.and(objs)
-    return query.or(objs)
-}
-function sort(query, fields, desc) {
-    let sort = {}
-    for (let [index, field] of fields.entries()) {
-        sort[field] = desc[index] == "true" ? -1 : 1
-    }
-    return query.sort(sort)
-}
-async function all(req, res) {
-
-    //Query 생성
-    let CountQuery = getCountQuery(req.query.boid)
-    let findQuery = getQuery(req.query.boid)
-
-    //add search
-    if (req.query.searchField && req.query.searchWord) {
-        let and = req.query.and == "true" ? true : false
-        CountQuery = search(CountQuery, req.query.searchField, req.query.searchWord, and)
-        findQuery = search(findQuery, req.query.searchField, req.query.searchWord, and)
-    }
-
-    //console.log(CountQuery)
-
-    //Query #1(count) 실행
-    let cnt = await CountQuery.exec()
-    
-    //변수 계산
-    let page = req.query.page * 1
-    let limit = req.query.itemsPerPage * 1
-    let skip = (page - 1) * limit
-    let totalPage = parseInt((cnt - 1) / limit) + 1
-
-    //add sort
-    if (req.sortBy) {
-        findQuery = sort(q, req.query.sortBy, req.query.sortDesc)
-    }
-
-    //add skip
-    findQuery.skip(skip)
-
-    //add limit
-    findQuery.limit(limit)
-
-    //Query #2(find) 실행
-    let ret = await findQuery.exec()
-
-    let userIdSet = loopAndFindUserIdInPosts(ret, new Set())
-    let names = await namesMap(userIdSet)
-
-    return {
-        page: page,
-        totalPage: totalPage,
-        totalCount: cnt,
-        skip: skip,
-        limit: limit,
-        items: ret,
-        names: names
-    }
-}
-async function getPosts(req) {
-
-    let page = req.query.page * 1
-    let limit = req.query.itemsPerPage * 1
-
-    let sort = {}
-    if (req.query.sortBy) {
-        for (let [index, value] of req.query.sortBy.entries()) {
-            // if (index == 0) sort = {}
-            let field = value
-            let desc = req.query.sortDesc[index] == "true" ? -1 : 1
-            sort[field] = desc
-        }
-    }
-
-    //filter
-    let filter = {}
-    //filter["boardId"] = req.query.boid ? req.query.boid : {'$exists': true}
-    if (req.query.boid) {
-        filter["boardId"] = req.query.boid
-    }
-    if (req.query.searchField && req.query.searchWord) {
-        let arr = req.query.searchField.split("+")
-        for (let item of arr) {
-            filter[item] = new RegExp(req.query.searchWord, 'i')
-        }
-    }
-    console.log(filter)
-
-    let cnt = await count(filter)
-
-    let totalPage = parseInt((cnt - 1) / limit) + 1
-    let skip = (page - 1) * limit
-
-    let ret = await find(filter, sort, skip, limit)
-
-    let userIdSet = loopAndFindUserIdInPosts(ret, new Set())
-
-    let names = await namesMap(userIdSet)
-
-    return {
-        page: page,
-        totalPage: totalPage,
-        totalCount: cnt,
-        sort: sort,
-        skip: skip,
-        limit: limit,
-        items: ret,
-        names: names
-    }
-}
-async function getPost(id) {
-    let ret = await Post.findById(id).exec()
-    let userIdSet = loopAndFindUserIdInPost(ret, new Set())
-    let names = await namesMap(userIdSet)
-    return {
-        item: ret,
-        names: names
-    }
-}
-function loopAndFindUserIdInPosts(obj, set) {
-    for (let item of obj) {
-        set.add(item.userId)
-    }
-    return set
-}
-function loopAndFindUserIdInPost(obj, set) {
-    set.add(obj.userId)
-    if (obj.comments && obj.comments.length > 0) {
-        for (let item of obj.comments) {
-            loopAndFindUserIdInPost(item, set)
-        }
-    }
-    return set
-}
-async function namesMap(set) {
-    let arr = await nameDocs(set)
-    let map = {}
-    for (let item of arr) {
-        map[item.userId] = item.name
-    }
-    return map
-}
-*/
-
 function toPayload(queryStringObj) {
 
     let qso = queryStringObj
+
     //filter: Obj
-    let filter = qso.boardId ? { boardId: qso.boardId } : {}
+    let filter = qso.filt ? qso.filt : {}
 
     //searcher: Array
     let searcher = []
-
     let io = qso.search
     for (let key in io) {
         if (io[key]) {
@@ -239,23 +21,26 @@ function toPayload(queryStringObj) {
             searcher.push(obj)
         }
     }
+
     //sorter: Obj
     let sorter = {}
-
     let fields = qso.sort.fields
-
     let descs = qso.sort.descs
-
     for (let [index, field] of fields.entries()) {
         sorter[field] = descs[index] == "true" ? -1 : 1
     }
 
-    return {
-        skip: (qso.page - 1) * qso.limit,
-        limit: qso.limit * 1,
+    //pager: Obj
+    let pager = {
+        skip: (qso.paging.page - 1) * qso.paging.limit,
+        limit: qso.paging.limit
+    }
+
+    return { //payload
         filter: filter,
         searcher: searcher,
         sorter: sorter,
+        pager: pager,
         and: qso.and
     }
 
@@ -273,14 +58,9 @@ async function getPosts(payload) {
 }
 
 router.get('/', function (req, res) {
-
     let payload = toPayload({
-        page: req.query.page,
-        limit: req.query.itemsPerPage,
-        boardId: req.query["search.boardId"], //이 라인을 search: 으로 이동시키면 front에서 게시판 명을 검색 옵션으로 사용 가능할 듯
-        sort: {
-            fields: req.query.sortBy,
-            descs: req.query.sortDesc
+        filt: {
+            boardId: req.query["search.boardId"] //이 라인을 search: 으로 이동시키면 front에서 게시판 명을 검색 옵션으로 사용 가능할 듯
         },
         search: { //검색에 사용할 필드만 명시
             _id: req.query["search._id"],
@@ -288,13 +68,18 @@ router.get('/', function (req, res) {
             subject: req.query["search.subject"],
             content: req.query["search.content"],
         },
+        sort: {
+            fields: req.query.sortBy,
+            descs: req.query.sortDesc
+        },
+        paging: {
+            page: req.query.page * 1,
+            limit: req.query.itemsPerPage * 1
+        },
         and: req.query.and
     })
 
-    console.log(req.query.sortBy)
-    console.log(payload.searcher)
-
-    // all(req).then(ret => res.send(ret)).catch(console.log)
+    console.log("payload", payload)
 
     getPosts(payload).then(ret => {
         // console.log(ret)
@@ -315,20 +100,14 @@ router.post("/", function (req, res) {
     }).catch(console.log)
 })
 
-/* 경과시간 측정
-let startTime = new Date().getMilliseconds()
-    .finally( () => {
-        let endTime = new Date().getMilliseconds()
-        console.log("경과시간(ms)", endTime - startTime)
-    })
- */
 module.exports = router
 
 /*
-조회, 검색 컨벤션
 
-===== FRONT (주로 vuetify 체계에 따름) ====
-<Parameter>
+====== 조회, 검색 컨벤션 ======
+
+1. FRONT (주로 vuetify 체계에 따름)
+<Parameter=QueryString>
 -------------------------------------------------
 명칭                Parameter 속성  실제 속성
 -------------------------------------------------
@@ -352,4 +131,52 @@ Must Sort:           mustSort       Boolean
     -----------------------------------------------------
 
 검색 조건:            and          Boolean
- */
+
+
+2. Backend
+
+<QueryStringObject>
+filt: { //향후 필터가 되는 객체
+    필드: 값
+},
+search: { //검색에 사용할 객체(이때 검색은 %검색어%)
+    필드: 값
+},
+sort: { //소트에 사용할 객체
+    fields: (=sortBy), //배열
+    descs: (=sortDesc) //배열
+},
+paging: { //페이징에 사용할 객체
+    page: (=page)
+    limit: (=itemsPerPage)
+},
+and: req.query.and //검색조건
+
+<Payload>
+filter: { //obj
+    필드: 값
+    ...
+}
+searcher: [ //array
+    { 필드: 값 },
+    { 필드: 값 },
+    ...
+]
+sorter: { //obj
+    필드: 1/-1,
+    ...
+}
+pager: { //obj
+    skip: 값,
+    limit: 값
+}
+and: 값 //boolean
+*/
+
+/* 경과시간 측정
+let startTime = new Date().getMilliseconds()
+    .finally( () => {
+        let endTime = new Date().getMilliseconds()
+        console.log("경과시간(ms)", endTime - startTime)
+    })
+*/

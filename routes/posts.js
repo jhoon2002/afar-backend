@@ -26,8 +26,10 @@ function toPayload(queryStringObj) {
     let sorter = {}
     let fields = qso.sort.fields
     let descs = qso.sort.descs
-    for (let [index, field] of fields.entries()) {
-        sorter[field] = descs[index] == "true" ? -1 : 1
+    if (fields) {
+        for (let [index, field] of fields.entries()) {
+            sorter[field] = descs[index] === "true" ? -1 : 1
+        }
     }
 
     //pager: Obj
@@ -55,6 +57,11 @@ async function getPosts(payload) {
         count: count,
         items: ret
     }
+}
+
+async function getPost(id) {
+    let ret = await Post.findById(id)
+    return ret
 }
 
 router.get('/', function (req, res) {

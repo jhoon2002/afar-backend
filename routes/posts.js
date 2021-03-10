@@ -72,6 +72,7 @@ router.get('/', function (req, res) {
         search: { //검색에 사용할 필드만 명시
             _id: req.query["search._id"],
             userId: req.query["search.userId"],
+            name: req.query["search.name"],
             subject: req.query["search.subject"],
             content: req.query["search.content"],
         },

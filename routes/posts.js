@@ -4,6 +4,21 @@ let router = express.Router()
 let Post = require("../models/post.js")
 let Employee = require("../models/employee.js")
 
+let multer = require('multer'); // express에 multer모듈 적용 (for 파일업로드)
+
+let storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/') // cb 콜백함수를 통해 전송된 파일 저장 디렉토리 설정
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname) // cb 콜백함수를 통해 전송된 파일 이름 설정
+    }
+})
+
+let upload = multer({ storage: storage })
+// 입력한 파일이 uploads/ 폴더 내에 저장된다.
+// multer라는 모듈이 함수라서 함수에 옵션을 줘서 실행을 시키면, 해당 함수는 미들웨어를 리턴한다.
+
 function toPayload(queryStringObj) {
 
     let qso = queryStringObj
@@ -100,13 +115,20 @@ router.get('/:id', function (req, res) {
     getPost(req.params.id).then(ret => res.send(ret)).catch(console.log)
 })
 
-router.post("/", function (req, res) {
+router.post("/", upload.single("board"), function (req, res) {
+    console.log("여기")
+    /*
     let post = req.body
     post._id = new mongoose.Types.ObjectId()
     Post.create(post).then(ret => {
         res.send(ret)
     }).catch(console.log)
+
+     */
+
+    res.send("~~~~~~~~~")
 })
+
 
 module.exports = router
 

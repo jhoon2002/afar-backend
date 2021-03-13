@@ -43,4 +43,6 @@ app.use(function(err, req, res, next) {
   res.render('error')
 })
 
+app.use('/users', express.static('uploads'));
+
 module.exports = app

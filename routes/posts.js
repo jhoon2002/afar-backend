@@ -6,9 +6,21 @@ let Employee = require("../models/employee.js")
 
 let multer = require('multer'); // express에 multer모듈 적용 (for 파일업로드)
 
+// 1. multer 미들웨어 등록
+// let upload = multer({
+//     dest: "upload/"
+// })
+
+// const upload = multer({
+//     storage: storage,
+//     limits: {
+//         fieldSize: 10 * 1024 * 1024
+//     }
+// })
+
 let storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/') // cb 콜백함수를 통해 전송된 파일 저장 디렉토리 설정
+        cb(null, 'upload/') // cb 콜백함수를 통해 전송된 파일 저장 디렉토리 설정
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname) // cb 콜백함수를 통해 전송된 파일 이름 설정
@@ -115,8 +127,8 @@ router.get('/:id', function (req, res) {
     getPost(req.params.id).then(ret => res.send(ret)).catch(console.log)
 })
 
-router.post("/", upload.single("board"), function (req, res) {
-    console.log("여기")
+router.post("/", upload.single('test'), function (req, res) {
+    // console.log("req", req.file)
     /*
     let post = req.body
     post._id = new mongoose.Types.ObjectId()
@@ -125,8 +137,23 @@ router.post("/", upload.single("board"), function (req, res) {
     }).catch(console.log)
 
      */
+// 3. 파일 객체
+    let file = req.file
 
-    res.send("~~~~~~~~~")
+    // 4. 파일 정보
+    let ret = {
+        originalName : file.originalname,
+        savedName: "",
+        savedPath: "",
+        size : file.size,
+    }
+    res.json(ret)
+})
+
+router.delete("/", function (req, res) {
+
+
+
 })
 
 

@@ -1,0 +1,12 @@
+<파일 업로드 방식>
+1. vue-filepond 사용
+2. 파일선택시 우선 업로드(필터링 실시)
+3. 저장 경로 <project>/upload
+4. 저장 파일명은 `${Date.now()}__${file.originalname}`
+4. 최종 submit 에 성공할 경우, 아래 경로로 이동
+5. 최종 저장 경로는
+  (1) 모든 게시판 <project>/files/board/<연도>/파일명
+  (2) 공문 <project>/files/document/<연도>/파일명
+6. <project>/upload 내의 모든 파일은 정기적으로 삭제(스케줄러 사용)
+   스케줄러 사용법: https://happybono.wordpress.com/2019/10/07/tip-windows-%EC%9E%91%EC%97%85-%EC%8A%A4%EC%BC%80%EC%A4%84%EB%9F%AC%EB%A5%BC-%ED%86%B5%ED%95%B4-%ED%8A%B9%EC%A0%95-%EC%8B%9C%EA%B0%84%EC%97%90-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%A8-%EC%9E%90%EB%8F%99/
+   파일 삭제 배치 파일: https://deftkang.tistory.com/147

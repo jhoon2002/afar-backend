@@ -11,31 +11,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02582ac3-2144-4bdf-a6cb-cba2f8e6e820" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/upload/19fab78bcbbb977c1e83eb58b056431c.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/2차 예산변경 신청서.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/K-Arts 옆에 한국예술종합학교(흑백).svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/K-Arts 한예종.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/K-Arts(b-w).jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/K-Arts(color)-dark.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/K-Arts(color).jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/[학교 융복합 문화예술교육 2020-45]결과자료집 제작비용 지급.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/e76fca10b3c8285f2a64a99fd8ec818f.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/iexplore.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/k-arts(korea-national--).jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/zoom 로그기록.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/zoom채팅기록.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/「2021~2022학년도 협력종합예술활동 운영 위탁 용역」 예산 산출내역서.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/내부2021-33 2020 교복입은 예술가 예술강사 11월, 12월 강의료 지급 정정 처리 요청.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/로고.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/부가세 연구.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/안드로메다.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/제목 없음.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/정책.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/user.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/upload/(붙임 2) 2차년도 결과보고서.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/posts.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/posts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/팁.txt" beforeDir="false" afterPath="$PROJECT_DIR$/팁.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +50,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="javascript.nodejs.core.library.configured.version" value="14.15.4" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/routes" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/models" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.jscs" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
@@ -88,9 +68,9 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\workspace\afar-backend\models" />
       <recent name="X:\workspace\afar-backend\routes" />
       <recent name="D:\workspace\afar-backend\routes" />
-      <recent name="D:\workspace\afar-backend\models" />
       <recent name="D:\workspace\afar-backend" />
     </key>
   </component>
@@ -121,6 +101,12 @@
       <workItem from="1615632133105" duration="10057000" />
       <workItem from="1615684754023" duration="1716000" />
       <workItem from="1615728248089" duration="617000" />
+      <workItem from="1615906305028" duration="6000" />
+      <workItem from="1616246957824" duration="565000" />
+      <workItem from="1618319316988" duration="764000" />
+      <workItem from="1618567631936" duration="18270000" />
+      <workItem from="1618619982546" duration="1723000" />
+      <workItem from="1618673847936" duration="605000" />
     </task>
     <task id="LOCAL-00001" summary="notebook">
       <created>1614603444755</created>

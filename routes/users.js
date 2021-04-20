@@ -3,6 +3,7 @@ let mongoose = require('mongoose')
 let router = express.Router()
 let User = require("../models/user.js")
 const crypto = require('crypto')
+const jwt = require('jsonwebtoken')
 
 const createSalt = () =>
     new Promise((resolve, reject) => {
@@ -31,10 +32,13 @@ const makePasswordHashed = (plainPassword, salt) =>
 
 async function check(userId, plainPassword) {
     if (!userId || !plainPassword) return false
-    const user = await User.findOne({ user_id: userId }, [ "salt", "password"]).exec()
+    const user = await User.findOne({ userId: userId }, [ "userId", "name", "salt", "password"]).exec()
     if (!user) return false
     const password = await makePasswordHashed(plainPassword, user.salt)
-    if (password === user.password) return true
+    if (password === user.password) return {
+        userId: user.userId,
+        name: user.name
+    }
     return false
 }
 
@@ -47,11 +51,92 @@ const getPassword = async plainPassword => {
     }
 }
 
-router.post('/check', function (req, res) {
+router.post('/login', function (req, res) {
     // console.log(req.body, req.query)
-    check(req.body.userId, req.body.password)
-        .then(ret => res.send(ret))
+
+    const userId = req.body.userId
+    const password = req.body.password
+    const jwtSecret = "secret"
+
+    check(userId, password)
+        .then(ret => {
+            if (ret) { //if api(check) returns user
+                //토큰 발급
+                const getToken = new Promise((resolve, reject) => {
+                    jwt.sign(
+                        {
+                            id: userId,
+                            // role: User.user_role
+                        },
+                        jwtSecret,
+                        {
+                            expiresIn: '7d',
+                            issuer: 'K-Aco',
+                            subject: 'User authorization'
+                        },
+                        (err, token) => {
+                            if (err) reject(err)
+                            resolve(token)
+                        })
+                })
+
+                getToken.then(token => {
+                        res.status(200).json({
+                            "status": 200,
+                            "msg": 'Login success',
+                            "user": ret,
+                            token
+                        })
+                    }
+                )
+            } else {
+                res.status(403).json({
+                    'status': 403,
+                    'msg': 'Login fail'
+                })
+            }
+
+        })
         .catch(console.log)
+})
+
+router.post('/refresh-token', (req, res) => {
+    return res.status(200).json({
+        'token': 'new_token',
+        'status': 200
+    })
+})
+
+router.get('/check-token', (req, res) => {
+    // 인증 확인
+    const token = req.headers['token'] // || req.query.token
+    let jwtSecret = 'secret'
+
+    if (!token || token === "null") {
+        res.status(400).json({
+            'status': 400,
+            'msg': 'Token 없음'
+        })
+        return
+    }
+    const checkToken = new Promise((resolve, reject) => {
+        jwt.verify(token, jwtSecret, function (err, decoded) {
+            if (err) reject(err)
+            resolve(decoded)
+        })
+    })
+
+    checkToken.then(
+        token => {
+            console.log(token)
+            //todo: 만료시간 연장 로직
+            res.status(200).json({
+                'status': 200,
+                'msg': 'success',
+                token
+            })
+        }
+    ).catch(console.log)
 })
 
 /* 테스트용

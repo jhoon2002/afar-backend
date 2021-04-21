@@ -70,7 +70,7 @@ router.post('/login', function (req, res) {
                         },
                         jwtSecret,
                         {
-                            expiresIn: '7d',
+                            expiresIn: '1m',
                             issuer: 'K-Aco',
                             subject: 'User authorization'
                         },
@@ -128,7 +128,7 @@ router.get('/check-token', (req, res) => {
 
     checkToken.then(
         token => {
-            console.log(token)
+            //console.log(token)
             //todo: 만료시간 연장 로직
             res.status(200).json({
                 'status': 200,
@@ -136,7 +136,13 @@ router.get('/check-token', (req, res) => {
                 token
             })
         }
-    ).catch(console.log)
+    ).catch(() => {
+        //console.log(e)
+        res.status(400).json({
+            'status': 400,
+            'msg': 'Token 만료'
+        })
+    })
 })
 
 /* 테스트용

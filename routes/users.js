@@ -4,6 +4,7 @@ let router = express.Router()
 let User = require("../models/user.js")
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
+const moment = require("moment")
 
 const createSalt = () =>
     new Promise((resolve, reject) => {
@@ -30,7 +31,7 @@ const makePasswordHashed = (plainPassword, salt) =>
         });
     });
 
-async function check(userId, plainPassword) {
+async function login(userId, plainPassword) {
     if (!userId || !plainPassword) return false
     const user = await User.findOne({ userId: userId }, [ "userId", "name", "salt", "password"]).exec()
     if (!user) return false
@@ -51,28 +52,31 @@ const getPassword = async plainPassword => {
     }
 }
 
+const key = "U-Koz56^--Yui"
+const expiredInterval = "1" //m
+const updateInterval = "-30" //s
+
 router.post('/login', function (req, res) {
     // console.log(req.body, req.query)
 
     const userId = req.body.userId
     const password = req.body.password
-    const jwtSecret = "secret"
 
-    check(userId, password)
+    login(userId, password)
         .then(ret => {
             if (ret) { //if api(check) returns user
                 //토큰 발급
                 const getToken = new Promise((resolve, reject) => {
                     jwt.sign(
                         {
-                            id: userId,
-                            // role: User.user_role
+                            userId: ret.userId,
+                            name: ret.name
                         },
-                        jwtSecret,
+                        key,
                         {
-                            expiresIn: '1m',
+                            expiresIn: expiredInterval + "m",
                             issuer: 'K-Aco',
-                            subject: 'User authorization'
+                            subject: '사용자 토큰'
                         },
                         (err, token) => {
                             if (err) reject(err)
@@ -110,37 +114,50 @@ router.post('/refresh-token', (req, res) => {
 router.get('/check-token', (req, res) => {
     // 인증 확인
     const token = req.headers['token'] // || req.query.token
-    let jwtSecret = 'secret'
 
+    console.log("token", token)
+
+    //req에 토큰 자체가 없는 경우(400:잘못된 요청=>로그인 필요)
     if (!token || token === "null") {
         res.status(400).json({
             'status': 400,
-            'msg': 'Token 없음'
+            'msg': '토큰 없음(잘못된 요청)'
         })
         return
     }
+
     const checkToken = new Promise((resolve, reject) => {
-        jwt.verify(token, jwtSecret, function (err, decoded) {
+        jwt.verify(token, key, function (err, decoded) {
             if (err) reject(err)
             resolve(decoded)
         })
     })
 
     checkToken.then(
+        //토큰이 유효한 경우(200)
         token => {
-            //console.log(token)
-            //todo: 만료시간 연장 로직
+            // console.log("성공")
+            // console.log(token)
+            // todo: 만료시간 연장 로직
+            // console.log(moment(new Date().getTime()), moment(token.exp*1000).add("-30", "s"))
+
+            if (moment(new Date().getTime()) < moment(token.exp*1000).add(updateInterval, "s")) {
+                console.log("갱신!!!")
+            }
+
             res.status(200).json({
                 'status': 200,
-                'msg': 'success',
+                'msg': '정상 토큰',
                 token
             })
         }
     ).catch(() => {
+        // console.log("실패")
+        //토큰이 유효하지 않은 경우(=>로그인 필요)
         //console.log(e)
-        res.status(400).json({
-            'status': 400,
-            'msg': 'Token 만료'
+        res.status(401).json({
+            'status': 401,
+            'msg': '토큰에 이상이 있거나 기한 만료(권한 없음)'
         })
     })
 })

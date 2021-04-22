@@ -12,6 +12,8 @@
   <component name="ChangeListManager">
     <list default="true" id="02582ac3-2144-4bdf-a6cb-cba2f8e6e820" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -46,7 +48,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="javascript.nodejs.core.library.configured.version" value="12.17.0" />
+    <property name="javascript.nodejs.core.library.configured.version" value="14.15.4" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/models" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.jscs" value="true" />
@@ -106,6 +108,7 @@
       <workItem from="1618673847936" duration="1354000" />
       <workItem from="1618881610291" duration="19020000" />
       <workItem from="1618968209421" duration="4360000" />
+      <workItem from="1619072237217" duration="7566000" />
     </task>
     <task id="LOCAL-00001" summary="notebook">
       <created>1614603444755</created>
@@ -194,14 +197,14 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1615079352301" />
-    <state x="666" y="307" key="git4idea.merge.GitPullDialog" timestamp="1618881616980">
+    <state x="666" y="307" key="git4idea.merge.GitPullDialog" timestamp="1618993104343">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="666" y="307" key="git4idea.merge.GitPullDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1618881616980" />
-    <state x="616" y="240" key="run.anything.popup" timestamp="1615110493006">
+    <state x="666" y="307" key="git4idea.merge.GitPullDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1618993104343" />
+    <state x="616" y="240" key="run.anything.popup" timestamp="1619082852657">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1615110493006" />
+    <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1619082852657" />
     <state x="340" y="230" width="672" height="678" key="search.everywhere.popup" timestamp="1618882846801">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

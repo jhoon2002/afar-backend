@@ -56,52 +56,61 @@ const key = "U-Koz56^--Yui"
 const expiredInterval = "1" //m
 const updateInterval = "-30" //s
 
-router.post('/login', function (req, res) {
-    // console.log(req.body, req.query)
+const getToken = (userId, name) => new Promise((resolve, reject) => {
+    jwt.sign(
+        {
+            userId: userId,
+            name: name
+        },
+        key,
+        {
+            expiresIn: expiredInterval + "m",
+            //issuer: 'K-Aco',
+            //subject: '사용자 토큰'
+        },
+        (err, token) => {
+            if (err) reject(err)
+            resolve(token)
+        })
+})
+
+const checkToken = token => new Promise((resolve, reject) => {
+    jwt.verify(token, key, function (err, decoded) {
+        if (err) reject(err)
+        resolve(decoded)
+    })
+})
+
+router.post('/login', async (req, res) => {
 
     const userId = req.body.userId
     const password = req.body.password
 
-    login(userId, password)
-        .then(ret => {
-            if (ret) { //if api(check) returns user
-                //토큰 발급
-                const getToken = new Promise((resolve, reject) => {
-                    jwt.sign(
-                        {
-                            userId: ret.userId,
-                            name: ret.name
-                        },
-                        key,
-                        {
-                            expiresIn: expiredInterval + "m",
-                            issuer: 'K-Aco',
-                            subject: '사용자 토큰'
-                        },
-                        (err, token) => {
-                            if (err) reject(err)
-                            resolve(token)
-                        })
-                })
+    const loggedUser = await login(userId, password)
 
-                getToken.then(token => {
-                        res.status(200).json({
-                            "status": 200,
-                            "msg": 'Login success',
-                            "user": ret,
-                            token
-                        })
-                    }
-                )
-            } else {
-                res.status(403).json({
-                    'status': 403,
-                    'msg': 'Login fail'
-                })
-            }
-
+    if (!loggedUser) {
+        res.status(403).json({
+            "status": 403,
+            "msg": '로그인 실패'
         })
-        .catch(console.log)
+        return
+    }
+
+    try {
+        const token = await getToken(loggedUser.userId, loggedUser.name)
+        res.status(200).json({
+            "status": 200,
+            "msg": '토큰 생성',
+            token
+        })
+    } catch {
+        res.status(400).json({
+            "status": 400,
+            "msg": '토큰 생성 실패'
+        })
+    } finally {
+        return
+    }
 })
 
 router.post('/refresh-token', (req, res) => {
@@ -111,7 +120,7 @@ router.post('/refresh-token', (req, res) => {
     })
 })
 
-router.get('/check-token', (req, res) => {
+router.get('/check-token', async (req, res) => {
     // 인증 확인
     const token = req.headers['token'] // || req.query.token
 
@@ -126,40 +135,27 @@ router.get('/check-token', (req, res) => {
         return
     }
 
-    const checkToken = new Promise((resolve, reject) => {
-        jwt.verify(token, key, function (err, decoded) {
-            if (err) reject(err)
-            resolve(decoded)
-        })
-    })
+    try {
+        const validToken = await checkToken(token)
 
-    checkToken.then(
-        //토큰이 유효한 경우(200)
-        token => {
-            // console.log("성공")
-            // console.log(token)
-            // todo: 만료시간 연장 로직
-            // console.log(moment(new Date().getTime()), moment(token.exp*1000).add("-30", "s"))
-
-            if (moment(new Date().getTime()) < moment(token.exp*1000).add(updateInterval, "s")) {
-                console.log("갱신!!!")
-            }
-
-            res.status(200).json({
-                'status': 200,
-                'msg': '정상 토큰',
-                token
-            })
+        if (moment(new Date().getTime()) < moment(validToken.exp*1000).add(updateInterval, "s")) {
+            console.log("갱신!!!")
         }
-    ).catch(() => {
-        // console.log("실패")
-        //토큰이 유효하지 않은 경우(=>로그인 필요)
-        //console.log(e)
+
+        res.status(200).json({
+            'status': 200,
+            'msg': '정상 토큰',
+            validToken
+        })
+    } catch {
         res.status(401).json({
             'status': 401,
             'msg': '토큰에 이상이 있거나 기한 만료(권한 없음)'
         })
-    })
+    } finally {
+        return
+    }
+
 })
 
 /* 테스트용

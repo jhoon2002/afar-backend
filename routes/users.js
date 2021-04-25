@@ -90,7 +90,7 @@ router.post('/login', async (req, res) => {
 
     if (!loggedUser) {
         res.status(403).json({
-            "status": 403,
+            "status": 403, //금지됨(비인가 상태)
             "msg": '로그인 실패'
         })
         return
@@ -98,14 +98,15 @@ router.post('/login', async (req, res) => {
 
     try {
         const token = await getToken(loggedUser.userId, loggedUser.name)
+        console.log("생성", new Date())
         res.status(200).json({
             "status": 200,
             "msg": '토큰 생성',
             token
         })
     } catch {
-        res.status(400).json({
-            "status": 400,
+        res.status(401).json({
+            "status": 401, //권한 없음(인증이 필요한 상태)
             "msg": '토큰 생성 실패'
         })
     } finally {
@@ -121,16 +122,13 @@ router.post('/refresh-token', (req, res) => {
 })
 
 router.get('/check-token', async (req, res) => {
-    // 인증 확인
     const token = req.headers['token'] // || req.query.token
-
-    console.log("token", token)
 
     //req에 토큰 자체가 없는 경우(400:잘못된 요청=>로그인 필요)
     if (!token || token === "null") {
         res.status(400).json({
-            'status': 400,
-            'msg': '토큰 없음(잘못된 요청)'
+            "status": 400, //잘못된 요청
+            "msg": '토큰이 없습니다.'
         })
         return
     }
@@ -138,19 +136,29 @@ router.get('/check-token', async (req, res) => {
     try {
         const validToken = await checkToken(token)
 
-        if (moment(new Date().getTime()) < moment(validToken.exp*1000).add(updateInterval, "s")) {
-            console.log("갱신!!!")
-        }
+        // console.log("validToken", validToken)
 
+        //토큰 갱신
+        if (moment(new Date().getTime()) > moment(validToken.exp*1000).add(updateInterval, "s")) {
+            const newToken = await getToken(validToken.userId, validToken.name)
+            res.status(201).json({
+                'status': 201,
+                'msg': '갱신 토큰',
+                newToken
+            })
+            console.log("갱신", new Date())
+            return
+        }
         res.status(200).json({
             'status': 200,
             'msg': '정상 토큰',
             validToken
         })
-    } catch {
+    } catch(e) {
+        // console.log(e)
         res.status(401).json({
             'status': 401,
-            'msg': '토큰에 이상이 있거나 기한 만료(권한 없음)'
+            'msg': '유효하지 않은 토큰이거나 토큰 갱신 중 에러'
         })
     } finally {
         return
@@ -158,19 +166,15 @@ router.get('/check-token', async (req, res) => {
 
 })
 
-/* 테스트용
-router.get('/check-test', function (req, res) {
-    check(req.query.userId, req.query.password)
-        .then(ret => res.send(ret))
-        .catch(console.log)
-})
-*/
+router.post('/is-userid', async (req, res) => {
 
-/* 솔트와 패스워드 발급기
-router.get('/get-password', function (req, res) {
-    // console.log(req.query, req.params)
-    getPassword(req.query.password).then(ret => res.send(ret))
+    const ret = await User.find( { userId: req.body.userId }, { userId: 1 } )
+
+    return res.status(200).json({
+        'status': 200,
+        'msg': '아이디 존재',
+        'isUserId': ret.length > 0
+    })
 })
-*/
 
 module.exports = router

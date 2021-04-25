@@ -61,7 +61,7 @@
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.prettier.on.save" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
-    <property name="ts.external.directory.path" value="X:\Intellij\IntelliJ IDEA 2020.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2020.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -107,6 +107,7 @@
       <workItem from="1618881610291" duration="19020000" />
       <workItem from="1618968209421" duration="4360000" />
       <workItem from="1619072237217" duration="7566000" />
+      <workItem from="1619224447363" duration="14070000" />
     </task>
     <task id="LOCAL-00001" summary="notebook">
       <created>1614603444755</created>

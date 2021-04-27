@@ -169,12 +169,18 @@ router.get('/check-token', async (req, res) => {
 router.post('/is-userid', async (req, res) => {
 
     const ret = await User.find( { userId: req.body.userId }, { userId: 1 } )
-
-    return res.status(200).json({
-        'status': 200,
-        'msg': '아이디 존재',
-        'isUserId': ret.length > 0
+    if (ret.length > 0) {
+        return res.status(200).json({
+            'status': 200,
+            'msg': '같은 아이디 존재'
+        })
+        return
+    }
+    return res.status(204).json({
+        'status': 204,
+        'msg': '같은 아이디 미존재'
     })
+    return
 })
 
 module.exports = router

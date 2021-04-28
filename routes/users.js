@@ -5,6 +5,8 @@ let User = require("../models/user.js")
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const moment = require("moment")
+// const { toPayload } = require("../apis/util.js")
+const util = require("../apis/util.js")
 
 const createSalt = () =>
     new Promise((resolve, reject) => {
@@ -183,4 +185,37 @@ router.post('/is-userid', async (req, res) => {
     return
 })
 
+router.get('/', async function (req, res) {
+    const payload = util.toPayload({
+        filt: {
+            // boardId: req.query["search.boardId"] //이 라인을 search: 으로 이동시키면 front에서 게시판 명을 검색 옵션으로 사용 가능할 듯
+        },
+        search: { //검색에 사용할 필드만 명시
+            // _id: req.query["search._id"],
+            userId: req.query["search.userId"],
+            name: req.query["search.name"],
+            cellphone: req.query["search.cellphone"],
+            email: req.query["search.email"],
+        },
+        sort: {
+            fields: req.query.sortBy,
+            descs: req.query.sortDesc
+        },
+        paging: {
+            page: req.query.page * 1,
+            limit: req.query.itemsPerPage * 1
+        },
+        and: req.query.and
+    })
+
+    const count = await User.countByPayload(payload)
+    const items = await User.findByPayload(payload)
+    // console.log("items", items)
+
+    return res.status(200).json({
+        totalPages: parseInt((count - 1) / payload.limit) + 1,
+        count: count,
+        items: items
+    })
+})
 module.exports = router

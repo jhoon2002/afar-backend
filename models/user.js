@@ -9,7 +9,7 @@ let userSchema = new Schema({
     name: String,
     no: String,
     jumin: String,
-    cellphone: Boolean,
+    cellphone: String,
     email: String,
     status: {
         type: String,
@@ -19,14 +19,31 @@ let userSchema = new Schema({
     updated: { type:Date, default:Date.now }
 })
 
-/*userSchema.statics.findSomeone = function(userId) {
+userSchema.statics.findByPayload = function(payload) {
+    let query = this.find(payload.filter)
+    if (payload.searcher.length > 0) {
+        if (payload.and) {
+            query.and(payload.searcher)
+        } else {
+            query.or(payload.searcher)
+        }
+    }
+    query.sort(payload.sorter)
+    query.skip(payload.pager.skip)
+    query.limit(payload.pager.limit)
+    return query.exec()
+}
 
-    // return this.findById(id, ["userId", "password", "salt"] ).exec()
-    return this.findById(userId).exec()
+userSchema.statics.countByPayload = function(payload) {
+    let query = this.countDocuments(payload.filter)
+    if (payload.searcher.length > 0) {
+        if (payload.and) {
+            query.and(payload.searcher)
+        } else {
+            query.or(payload.searcher)
+        }
+    }
+    return query.exec()
+}
 
-}*/
-
-// model을 post로 만들면 특별한 이름을 지정하지 않으면
-// mongoDB에서 알아서 Collection name을 알아서 복수형으로 해줍니다
-// 그리하여 Collection name은 posts로 됩니다
 module.exports = mongoose.model("user", userSchema)

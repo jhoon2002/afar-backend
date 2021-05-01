@@ -55,8 +55,8 @@ const getPassword = async plainPassword => {
 }
 
 const key = "U-Koz56^--Yui"
-const expiredInterval = "1" //m
-const updateInterval = "-30" //s
+const expiredInterval = "120" //m
+const updateInterval = "-40" //m
 
 const getToken = (userId, name) => new Promise((resolve, reject) => {
     jwt.sign(
@@ -141,7 +141,7 @@ router.get('/check-token', async (req, res) => {
         // console.log("validToken", validToken)
 
         //토큰 갱신
-        if (moment(new Date().getTime()) > moment(validToken.exp*1000).add(updateInterval, "s")) {
+        if (moment(new Date().getTime()) > moment(validToken.exp*1000).add(updateInterval, "m")) {
             const newToken = await getToken(validToken.userId, validToken.name)
             res.status(201).json({
                 'status': 201,

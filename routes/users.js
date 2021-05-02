@@ -1,7 +1,7 @@
 let express = require('express')
-let mongoose = require('mongoose')
 let router = express.Router()
 let User = require("../models/user.js")
+let mongoose = require('mongoose')
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const moment = require("moment")
@@ -168,23 +168,6 @@ router.get('/check-token', async (req, res) => {
 
 })
 
-router.post('/is-userid', async (req, res) => {
-
-    const ret = await User.find( { userId: req.body.userId }, { userId: 1 } )
-    if (ret.length > 0) {
-        return res.status(200).json({
-            'status': 200,
-            'msg': '같은 아이디 존재'
-        })
-        return
-    }
-    return res.status(204).json({
-        'status': 204,
-        'msg': '같은 아이디 미존재'
-    })
-    return
-})
-
 router.get('/', async function (req, res) {
     const payload = util.toPayload({
         filt: {
@@ -229,4 +212,87 @@ router.get('/:id', async function (req, res) {
         console.log(e)
     }
 })
+
+router.post('/is-userid', async (req, res) => {
+    const ret = await User.find( { userId: req.body.userId }, { userId: 1 } )
+    if (ret.length > 0) {
+        return res.status(200).json({
+            'status': 200,
+            'msg': '같은 아이디 존재'
+        })
+        return
+    }
+    return res.status(204).json({
+        'status': 204,
+        'msg': '같은 아이디 미존재'
+    })
+    return
+})
+
+router.post('/is-jumin', async (req, res) => {
+    const ret = await User.find( { jumin: req.body.jumin }, { jumin: 1 } )
+    if (ret.length > 0) {
+        return res.status(200).json({
+            'status': 200,
+            'msg': '같은 주민등록번호 존재'
+        })
+        return
+    }
+    return res.status(204).json({
+        'status': 204,
+        'msg': '같은 주민등록번호 미존재'
+    })
+    return
+})
+
+router.put("/:id", async (req, res) => {
+
+    // console.log(req.params.id)
+    // console.log(req.body)
+
+    let updateObj = req.body
+    updateObj.updated = new Date
+
+    try {
+        const user = await User.findByIdAndUpdate(req.params.id, { $set: updateObj },{ new: true })
+        return res.status(200).json({
+            "status": 200,
+            "msg": "수정 완료",
+            user
+        })
+    } catch {
+        return res.status(304).json({
+            status: 304,
+            msg: "수정되지 않음"
+        })
+    }
+})
+
+router.post("/", async (req, res) => {
+    try {
+        const now = new Date()
+        console.log("now", now)
+        const user = await User.create({
+            _id: new mongoose.Types.ObjectId(),
+            name: req.body.name,
+            cellphone: req.body.cellphone,
+            email: req.body.email,
+            created: now,
+            updated: now
+        })
+        console.log("user.created", user.created)
+        return res.status(200).json({
+            "status": 200,
+            "msg": "생성 완료",
+            user
+        })
+    } catch(e) {
+        console.log(e)
+        return res.status(304).json({
+            status: 304,
+            msg: "생성 못함"
+        })
+    }
+})
+
 module.exports = router

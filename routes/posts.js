@@ -1,8 +1,6 @@
 let express = require('express')
-let mongoose = require('mongoose')
 let router = express.Router()
 let Post = require("../models/post.js")
-let Employee = require("../models/employee.js")
 
 let multer = require('multer'); // express에 multer모듈 적용 (for 파일업로드)
 

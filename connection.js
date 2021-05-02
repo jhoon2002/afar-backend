@@ -2,11 +2,14 @@ const mongoose = require('mongoose')
 
 let uri = "mongodb+srv://jeongok:1111@cluster0.nba3n.gcp.mongodb.net/jeongok?retryWrites=true&w=majority"
 
+mongoose.set('useFindAndModify', false)
+
 mongoose.connect(
     uri,
     {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useFindAndModify: false
     }
 )
 //mongoose.connect(uri) //deprecated 되었다고 함 option을 붙여야..

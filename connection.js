@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
 let uri = "mongodb+srv://jeongok:1111@cluster0.nba3n.gcp.mongodb.net/jeongok?retryWrites=true&w=majority"
+//let uri = "mongodb://afar:afar2002!%40@219.252.48.111:8080/afar?retryWrites=true&w=majority"
 
 mongoose.set('useFindAndModify', false)
 

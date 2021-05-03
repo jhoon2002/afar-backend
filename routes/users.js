@@ -275,6 +275,7 @@ router.post("/", async (req, res) => {
         const user = await User.create({
             _id: new mongoose.Types.ObjectId(),
             name: req.body.name,
+            jumin: req.body.jumin,
             cellphone: req.body.cellphone,
             email: req.body.email,
             created: now,

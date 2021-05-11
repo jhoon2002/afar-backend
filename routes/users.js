@@ -296,4 +296,23 @@ router.post("/", async (req, res) => {
     }
 })
 
+router.get("/is-useridname/:keyword", async (req, res) => {
+    console.log("req.params.keyword", req.params.keyword,)
+    try {
+        let users = await User.find({
+            // userId: req.params.keyword,
+            name: new RegExp(req.params.keyword, 'i')
+        }, {
+            userId: 1,
+            name: 1
+        })
+        console.log("users", users)
+        res.status(200).json({
+            users
+        })
+    } catch(e) {
+        console.log(e)
+    }
+})
+
 module.exports = router

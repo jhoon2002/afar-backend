@@ -158,8 +158,8 @@ router.get('/check-token', async (req, res) => {
         })
     } catch(e) {
         // console.log(e)
-        res.status(401).json({
-            'status': 401,
+        res.status(204).json({
+            'status': 204,
             'msg': '유효하지 않은 토큰이거나 토큰 갱신 중 에러'
         })
     } finally {
@@ -304,7 +304,8 @@ router.get("/is-useridname/:keyword", async (req, res) => {
             name: new RegExp(req.params.keyword, 'i')
         }, {
             userId: 1,
-            name: 1
+            name: 1,
+            jumin: 1
         })
         console.log("users", users)
         res.status(200).json({

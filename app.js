@@ -7,6 +7,7 @@ let logger = require('morgan')
 let indexRouter = require('./routes/index')
 let usersRouter = require('./routes/users')
 let postsRouter = require('./routes/posts')
+let organsRouter = require('./routes/organs')
 
 // mongodb 연결
 require("./connection.js")
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/', indexRouter)
 app.use('/api/users', usersRouter)
 app.use("/api/posts", postsRouter)
+app.use("/api/organs", organsRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

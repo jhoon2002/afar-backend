@@ -11,10 +11,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02582ac3-2144-4bdf-a6cb-cba2f8e6e820" name="Default Changelist" comment="notebook">
-      <change afterPath="$PROJECT_DIR$/models/organ.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routes/organs.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/upload/download (1).jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/upload/★★★지역공모사업 제안서 (1).hwp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/upload/시민참여3.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -219,11 +219,11 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="763" y="221" key="Github.UntrackedFilesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1614596705403" />
-    <state x="759" y="221" key="RollbackChangesDialog" timestamp="1620018947728">
+    <state x="759" y="221" key="RollbackChangesDialog" timestamp="1621478089327">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="759" y="221" key="RollbackChangesDialog/0.0.1920.1040/1920.638.1920.1040@0.0.1920.1040" timestamp="1620018947728" />
-    <state x="759" y="221" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1614854401357" />
+    <state x="759" y="221" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1621478089327" />
     <state x="444" y="157" width="998" height="708" key="SettingsEditor" timestamp="1615034996992">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -236,11 +236,11 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1615079352301" />
-    <state x="666" y="307" key="git4idea.merge.GitPullDialog" timestamp="1620814435003">
+    <state x="666" y="307" key="git4idea.merge.GitPullDialog" timestamp="1621478094031">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="666" y="307" key="git4idea.merge.GitPullDialog/0.0.1920.1040/1920.638.1920.1040@0.0.1920.1040" timestamp="1620018953169" />
-    <state x="666" y="307" key="git4idea.merge.GitPullDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1620814435003" />
+    <state x="666" y="307" key="git4idea.merge.GitPullDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1621478094031" />
     <state x="616" y="240" key="run.anything.popup" timestamp="1621260398318">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

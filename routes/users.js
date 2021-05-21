@@ -316,4 +316,22 @@ router.get("/is-useridname/:keyword", async (req, res) => {
     }
 })
 
+
+let multer = require('multer')
+let storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'upload/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    }
+})
+let upload = multer({ storage: storage })
+
+router.post("/photo", upload.single('img'), function(req, res) {
+    res.status(200).json({
+        msg: "잘 되고 있음"
+    })
+})
+
 module.exports = router

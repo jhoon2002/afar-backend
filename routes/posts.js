@@ -6,7 +6,7 @@ let multer = require('multer'); // express에 multer모듈 적용 (for 파일업
 
 // 1. multer 미들웨어 등록
 // let upload = multer({
-//     dest: "uploads/"
+//     dest: "files/"
 // })
 
 // const upload = multer({
@@ -18,7 +18,7 @@ let multer = require('multer'); // express에 multer모듈 적용 (for 파일업
 
 let storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/') // cb 콜백함수를 통해 전송된 파일 저장 디렉토리 설정
+        cb(null, 'files/') // cb 콜백함수를 통해 전송된 파일 저장 디렉토리 설정
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname) // cb 콜백함수를 통해 전송된 파일 이름 설정
@@ -26,7 +26,7 @@ let storage = multer.diskStorage({
 })
 
 let upload = multer({ storage: storage })
-// 입력한 파일이 uploads/ 폴더 내에 저장된다.
+// 입력한 파일이 files/ 폴더 내에 저장된다.
 // multer라는 모듈이 함수라서 함수에 옵션을 줘서 실행을 시키면, 해당 함수는 미들웨어를 리턴한다.
 
 function toPayload(queryStringObj) {

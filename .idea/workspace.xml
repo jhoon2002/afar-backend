@@ -11,7 +11,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02582ac3-2144-4bdf-a6cb-cba2f8e6e820" name="Default Changelist" comment="notebook">
-      <change beforePath="$PROJECT_DIR$/uploads/abc.vu" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/abc.vu" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/files/faces/blob" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/files/faces/undefined.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/files/faces/안드로메다.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/posts.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/posts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -186,7 +191,21 @@
       <option name="project" value="LOCAL" />
       <updated>1621760479838</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="notebook">
+      <created>1621760521870</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1621760521870</updated>
+    </task>
+    <task id="LOCAL-00011" summary="notebook">
+      <created>1621760552583</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1621760552583</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -217,10 +236,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="720" y="228" key="#HTTP_Proxy/0.0.1920.1040@0.0.1920.1040" timestamp="1614864701174" />
-    <state x="721" y="320" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1621760469075">
+    <state x="721" y="320" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1621761692259">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="721" y="320" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1621760469075" />
+    <state x="721" y="320" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1621761692259" />
     <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1614642413684">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -242,10 +261,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="444" y="157" width="998" height="708" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1615034996992" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1620053031943">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1621760559119">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1620053031943" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1621760559119" />
     <state x="765" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1615079352301">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

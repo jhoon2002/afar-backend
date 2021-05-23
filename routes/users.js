@@ -102,8 +102,10 @@ router.post('/login', async (req, res) => {
         const token = await getToken(loggedUser.userId, loggedUser.name)
         console.log("생성", new Date())
         res.status(200).json({
-            "status": 200,
-            "msg": '토큰 생성',
+            status: 200,
+            msg: '토큰 생성',
+            userId: loggedUser.userId,
+            name: loggedUser.name,
             token
         })
     } catch {
@@ -124,10 +126,10 @@ router.post('/refresh-token', (req, res) => {
 })
 
 router.get('/check-token', async (req, res) => {
-    const token = req.headers['token'] // || req.query.token
+    const oldToken = req.headers['token'] // || req.query.token
 
     //req에 토큰 자체가 없는 경우(400:잘못된 요청=>로그인 필요)
-    if (!token || token === "null") {
+    if (!oldToken || oldToken === "null") {
         res.status(400).json({
             "status": 400, //잘못된 요청
             "msg": '토큰이 없습니다.'
@@ -136,17 +138,19 @@ router.get('/check-token', async (req, res) => {
     }
 
     try {
-        const validToken = await checkToken(token)
+        const validToken = await checkToken(oldToken)
 
         // console.log("validToken", validToken)
 
         //토큰 갱신
         if (moment(new Date().getTime()) > moment(validToken.exp*1000).add(updateInterval, "m")) {
-            const newToken = await getToken(validToken.userId, validToken.name)
+            const token = await getToken(validToken.userId, validToken.name)
             res.status(201).json({
-                'status': 201,
-                'msg': '갱신 토큰',
-                newToken
+                status: 201,
+                msg: '토큰 갱신',
+                userId: validToken.userId,
+                name: validToken.name,
+                token
             })
             console.log("갱신", new Date())
             return
@@ -316,22 +320,57 @@ router.get("/is-useridname/:keyword", async (req, res) => {
     }
 })
 
-
 let multer = require('multer')
 let storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/')
+        cb(null, 'files/faces/')
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname)
+        console.log("--file", file)
+        console.log("--req.body.userId", req.body.userId)
+        cb(null, req.body.userId + ".jpg") //file.originalname
     }
 })
 let upload = multer({ storage: storage })
 
-router.post("/photo", upload.single('img'), function(req, res) {
+router.post("/face", upload.single('img'), function(req, res) {
+    console.log("req.file", req.file)
+    console.log("req.body.originalname", req.body.originalname)
     res.status(200).json({
         msg: "잘 되고 있음"
     })
 })
+
+// router.post("/face", async function(req, res) {
+//
+//     await upload(req, res, function (err) {
+//         if (!req.file) {
+//             //error handle
+//         } else {
+//             // res.json({ success: true, cv: cv })
+//         }
+//     })
+//
+//     console.log("req.file", req.file)
+//     console.log("req.body.originalname", req.body.originalname)
+//     res.status(200).json({
+//         msg: "잘 되고 있음"
+//     })
+// })
+
+// router.post("/face", multer({
+//         dest: 'uploads/faces/',
+//         changeDest: function(dest, req, res) {
+//             console.log(req.body.userId)
+//             return dest
+//         }
+//     }), function(req, res) {
+//
+//     console.log("req.file", req.file)
+//     console.log("req.body.originalname", req.body.originalname)
+//     res.status(200).json({
+//         msg: "잘 되고 있음"
+//     })
+// })
 
 module.exports = router

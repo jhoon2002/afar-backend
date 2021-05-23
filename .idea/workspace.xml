@@ -10,7 +10,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="02582ac3-2144-4bdf-a6cb-cba2f8e6e820" name="Default Changelist" comment="notebook" />
+    <list default="true" id="02582ac3-2144-4bdf-a6cb-cba2f8e6e820" name="Default Changelist" comment="notebook">
+      <change beforePath="$PROJECT_DIR$/uploads/abc.vu" beforeDir="false" afterPath="$PROJECT_DIR$/uploads/abc.vu" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -177,7 +179,14 @@
       <option name="project" value="LOCAL" />
       <updated>1621760218477</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="notebook">
+      <created>1621760479838</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1621760479838</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -208,6 +217,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="720" y="228" key="#HTTP_Proxy/0.0.1920.1040@0.0.1920.1040" timestamp="1614864701174" />
+    <state x="721" y="320" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1621760469075">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="721" y="320" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1621760469075" />
     <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1614642413684">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

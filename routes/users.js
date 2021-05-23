@@ -320,7 +320,7 @@ router.get("/is-useridname/:keyword", async (req, res) => {
 let multer = require('multer')
 let storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'upload/')
+        cb(null, 'uploads/')
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname)

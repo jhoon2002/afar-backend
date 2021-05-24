@@ -36,9 +36,11 @@ const makePasswordHashed = (plainPassword, salt) =>
 async function login(userId, plainPassword) {
     if (!userId || !plainPassword) return false
     const user = await User.findOne({ userId: userId }, [ "userId", "name", "salt", "password"]).exec()
+    //console.log(user)
     if (!user) return false
     const password = await makePasswordHashed(plainPassword, user.salt)
     if (password === user.password) return {
+        _id: user._id,
         userId: user.userId,
         name: user.name
     }
@@ -58,9 +60,10 @@ const key = "U-Koz56^--Yui"
 const expiredInterval = "120" //m
 const updateInterval = "-40" //m
 
-const getToken = (userId, name) => new Promise((resolve, reject) => {
+const getToken = (_id, userId, name) => new Promise((resolve, reject) => {
     jwt.sign(
         {
+            _id: _id,
             userId: userId,
             name: name
         },
@@ -99,11 +102,12 @@ router.post('/login', async (req, res) => {
     }
 
     try {
-        const token = await getToken(loggedUser.userId, loggedUser.name)
+        const token = await getToken(loggedUser._id, loggedUser.userId, loggedUser.name)
         console.log("생성", new Date())
         res.status(200).json({
             status: 200,
             msg: '토큰 생성',
+            _id: loggedUser._id,
             userId: loggedUser.userId,
             name: loggedUser.name,
             token
@@ -144,10 +148,11 @@ router.get('/check-token', async (req, res) => {
 
         //토큰 갱신
         if (moment(new Date().getTime()) > moment(validToken.exp*1000).add(updateInterval, "m")) {
-            const token = await getToken(validToken.userId, validToken.name)
+            const token = await getToken(validToken._id, validToken.userId, validToken.name)
             res.status(201).json({
                 status: 201,
                 msg: '토큰 갱신',
+                _id: validToken._id,
                 userId: validToken.userId,
                 name: validToken.name,
                 token
@@ -275,7 +280,7 @@ router.put("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
     try {
         const now = new Date()
-        console.log("now", now)
+        //console.log("now", now)
         const user = await User.create({
             _id: new mongoose.Types.ObjectId(),
             name: req.body.name,
@@ -311,7 +316,7 @@ router.get("/is-useridname/:keyword", async (req, res) => {
             name: 1,
             jumin: 1
         })
-        console.log("users", users)
+        //console.log("users", users)
         res.status(200).json({
             users
         })
@@ -323,54 +328,20 @@ router.get("/is-useridname/:keyword", async (req, res) => {
 let multer = require('multer')
 let storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'files/faces/')
+        cb(null, 'public/files/faces/')
     },
     filename: function (req, file, cb) {
-        console.log("--file", file)
-        console.log("--req.body.userId", req.body.userId)
-        cb(null, req.body.userId + ".jpg") //file.originalname
+        cb(null, file.originalname)
     }
 })
 let upload = multer({ storage: storage })
 
-router.post("/face", upload.single('img'), function(req, res) {
-    console.log("req.file", req.file)
-    console.log("req.body.originalname", req.body.originalname)
+router.post("/face", upload.single("file"), function(req, res) {
+    //multer의 처리 결과는 req.file 로 받음
+
     res.status(200).json({
         msg: "잘 되고 있음"
     })
 })
-
-// router.post("/face", async function(req, res) {
-//
-//     await upload(req, res, function (err) {
-//         if (!req.file) {
-//             //error handle
-//         } else {
-//             // res.json({ success: true, cv: cv })
-//         }
-//     })
-//
-//     console.log("req.file", req.file)
-//     console.log("req.body.originalname", req.body.originalname)
-//     res.status(200).json({
-//         msg: "잘 되고 있음"
-//     })
-// })
-
-// router.post("/face", multer({
-//         dest: 'uploads/faces/',
-//         changeDest: function(dest, req, res) {
-//             console.log(req.body.userId)
-//             return dest
-//         }
-//     }), function(req, res) {
-//
-//     console.log("req.file", req.file)
-//     console.log("req.body.originalname", req.body.originalname)
-//     res.status(200).json({
-//         msg: "잘 되고 있음"
-//     })
-// })
 
 module.exports = router

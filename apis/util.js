@@ -1,4 +1,4 @@
-const toPayload = function(queryStringObj) {
+module.exports.toPayload = function(queryStringObj) {
 
     let qso = queryStringObj
 
@@ -42,4 +42,6 @@ const toPayload = function(queryStringObj) {
 
 }
 
-exports.toPayload = toPayload
+module.exports.getFileExt = function(filename) {
+    return filename.substring(filename.lastIndexOf('.') + 1, filename.length)
+}

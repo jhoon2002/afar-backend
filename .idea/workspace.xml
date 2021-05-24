@@ -11,10 +11,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02582ac3-2144-4bdf-a6cb-cba2f8e6e820" name="Default Changelist" comment="notebook">
-      <change afterPath="$PROJECT_DIR$/upload/download (1).jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/★★★지역공모사업 제안서 (1).hwp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/upload/시민참여3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/files/faces/607e68e6bd257006b866e7ba.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apis/util.js" beforeDir="false" afterPath="$PROJECT_DIR$/apis/util.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/files/faces/undefined.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/files/faces/undefined.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -49,7 +50,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="javascript.nodejs.core.library.configured.version" value="14.15.4" />
+    <property name="javascript.nodejs.core.library.configured.version" value="12.17.0" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/models" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.jscs" value="true" />
@@ -67,6 +68,9 @@
     <property name="ts.external.directory.path" value="X:\Intellij\IntelliJ IDEA 2020.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="X:\workspace\afar-backend\public" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\workspace\afar-backend\models" />
       <recent name="D:\workspace\afar-backend\routes" />
@@ -126,6 +130,8 @@
       <workItem from="1621162494818" duration="682000" />
       <workItem from="1621244236376" duration="11316000" />
       <workItem from="1621335593583" duration="4154000" />
+      <workItem from="1621822020112" duration="730000" />
+      <workItem from="1621830446796" duration="13728000" />
     </task>
     <task id="LOCAL-00001" summary="notebook">
       <created>1614603444755</created>
@@ -219,28 +225,28 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="763" y="221" key="Github.UntrackedFilesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1614596705403" />
-    <state x="759" y="221" key="RollbackChangesDialog" timestamp="1621478089327">
+    <state x="759" y="221" key="RollbackChangesDialog" timestamp="1621815229773">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="759" y="221" key="RollbackChangesDialog/0.0.1920.1040/1920.638.1920.1040@0.0.1920.1040" timestamp="1620018947728" />
-    <state x="759" y="221" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1621478089327" />
+    <state x="759" y="221" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1621815229773" />
     <state x="444" y="157" width="998" height="708" key="SettingsEditor" timestamp="1615034996992">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="444" y="157" width="998" height="708" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1615034996992" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1620053031943">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1621815157438">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1620053031943" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1621815157438" />
     <state x="765" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1615079352301">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1615079352301" />
-    <state x="666" y="307" key="git4idea.merge.GitPullDialog" timestamp="1621478094031">
+    <state x="666" y="307" key="git4idea.merge.GitPullDialog" timestamp="1621815234864">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="666" y="307" key="git4idea.merge.GitPullDialog/0.0.1920.1040/1920.638.1920.1040@0.0.1920.1040" timestamp="1620018953169" />
-    <state x="666" y="307" key="git4idea.merge.GitPullDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1621478094031" />
+    <state x="666" y="307" key="git4idea.merge.GitPullDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1621815234864" />
     <state x="616" y="240" key="run.anything.popup" timestamp="1621260398318">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

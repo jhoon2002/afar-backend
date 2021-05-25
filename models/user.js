@@ -15,6 +15,7 @@ let userSchema = new Schema({
         type: String,
         part: String
     },
+    face: String,
     created: { type:Date, default:Date.now },
     updated: { type:Date, default:Date.now }
 })

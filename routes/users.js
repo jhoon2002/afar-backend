@@ -7,6 +7,8 @@ const jwt = require('jsonwebtoken')
 const moment = require("moment")
 // const { toPayload } = require("../apis/util.js")
 const util = require("../apis/util.js")
+const fs = require('fs')
+const path = require('path')
 
 const createSalt = () =>
     new Promise((resolve, reject) => {
@@ -35,14 +37,15 @@ const makePasswordHashed = (plainPassword, salt) =>
 
 async function login(userId, plainPassword) {
     if (!userId || !plainPassword) return false
-    const user = await User.findOne({ userId: userId }, [ "userId", "name", "salt", "password"]).exec()
+    const user = await User.findOne({ userId: userId }, [ "userId", "name", "salt", "password", "face"]).exec()
     //console.log(user)
     if (!user) return false
     const password = await makePasswordHashed(plainPassword, user.salt)
     if (password === user.password) return {
         _id: user._id,
         userId: user.userId,
-        name: user.name
+        name: user.name,
+        face: user.face
     }
     return false
 }
@@ -60,12 +63,10 @@ const key = "U-Koz56^--Yui"
 const expiredInterval = "120" //m
 const updateInterval = "-40" //m
 
-const getToken = (_id, userId, name) => new Promise((resolve, reject) => {
+const getToken = (_id) => new Promise((resolve, reject) => {
     jwt.sign(
         {
-            _id: _id,
-            userId: userId,
-            name: name
+            _id: _id
         },
         key,
         {
@@ -102,7 +103,7 @@ router.post('/login', async (req, res) => {
     }
 
     try {
-        const token = await getToken(loggedUser._id, loggedUser.userId, loggedUser.name)
+        const token = await getToken(loggedUser._id)
         console.log("생성", new Date())
         res.status(200).json({
             status: 200,
@@ -110,6 +111,7 @@ router.post('/login', async (req, res) => {
             _id: loggedUser._id,
             userId: loggedUser.userId,
             name: loggedUser.name,
+            face: loggedUser.face,
             token
         })
     } catch {
@@ -148,28 +150,25 @@ router.get('/check-token', async (req, res) => {
 
         //토큰 갱신
         if (moment(new Date().getTime()) > moment(validToken.exp*1000).add(updateInterval, "m")) {
-            const token = await getToken(validToken._id, validToken.userId, validToken.name)
+            const token = await getToken(validToken._id)
             res.status(201).json({
                 status: 201,
                 msg: '토큰 갱신',
-                _id: validToken._id,
-                userId: validToken.userId,
-                name: validToken.name,
                 token
             })
             console.log("갱신", new Date())
             return
         }
         res.status(200).json({
-            'status': 200,
-            'msg': '정상 토큰',
+            status: 200,
+            msg: '정상 토큰',
             validToken
         })
     } catch(e) {
         // console.log(e)
         res.status(204).json({
-            'status': 204,
-            'msg': '유효하지 않은 토큰이거나 토큰 갱신 중 에러'
+            status: 204,
+            msg: '유효하지 않은 토큰이거나 토큰 갱신 중 에러'
         })
     } finally {
         return
@@ -214,6 +213,7 @@ router.get('/', async function (req, res) {
 router.get('/:id', async function (req, res) {
     try {
         let user = await User.findById(req.params.id)
+        // console.log(user)
         res.status(200).json({
             user
         })
@@ -290,7 +290,7 @@ router.post("/", async (req, res) => {
             created: now,
             updated: now
         })
-        console.log("user.created", user.created)
+        // console.log("user.created", user.created)
         return res.status(200).json({
             "status": 200,
             "msg": "생성 완료",
@@ -306,7 +306,7 @@ router.post("/", async (req, res) => {
 })
 
 router.get("/is-useridname/:keyword", async (req, res) => {
-    console.log("req.params.keyword", req.params.keyword,)
+    // console.log("req.params.keyword", req.params.keyword,)
     try {
         let users = await User.find({
             // userId: req.params.keyword,
@@ -325,10 +325,12 @@ router.get("/is-useridname/:keyword", async (req, res) => {
     }
 })
 
-let multer = require('multer')
-let storage = multer.diskStorage({
+const publicdir = "public/"
+const facedir = "files/faces/"
+const multer = require('multer')
+const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'public/files/faces/')
+        cb(null, publicdir + facedir)
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname)
@@ -336,12 +338,77 @@ let storage = multer.diskStorage({
 })
 let upload = multer({ storage: storage })
 
-router.post("/face", upload.single("file"), function(req, res) {
+router.post("/face", upload.single("file"), async function(req, res) {
     //multer의 처리 결과는 req.file 로 받음
 
-    res.status(200).json({
-        msg: "잘 되고 있음"
+    try {
+        const user = await User.findByIdAndUpdate(req.body.user_id, {
+                $set: {
+                    face: req.file.originalname,
+                    updated: new Date()
+                }
+            },{ new: true })
+
+        res.status(200).json({
+            msg: "업로드 완료",
+            file: req.file
+        })
+    } catch(e) {
+        console.log(e)
+        return res.status(304).json({
+            status: 304,
+            msg: "수정되지 않음"
+        })
+    }
+})
+
+router.delete("/face/:_id/:filename", async function(req, res) {
+
+    const filePath = path.join(__dirname, "../" + publicdir + facedir, req.params.filename)
+
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+        if (err) {
+            return res.status(304).json({
+                status: 304,
+                msg: "파일에 접근할 수 없음"
+            })
+        }
+        if (req.params.filename === "none.svg") {
+            return res.status(304).json({
+                status: 304,
+                msg: "none.svg는 삭제할 수 없음"
+            })
+        }
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                return res.status(304).json({
+                    status: 304,
+                    msg: "파일을 삭제할 수 없음"
+                })
+            }
+        })
     })
+
+    try {
+        await User.findByIdAndUpdate(req.params._id, {
+            $set: {
+                face: "",
+                updated: new Date()
+            }
+        },{ new: true })
+
+        res.status(200).json({
+            status: 200,
+            msg: "삭제 완료"
+        })
+
+    } catch (e) {
+        console.log(e)
+        return res.status(304).json({
+            status: 304,
+            msg: "사용자 정보 수정 실패"
+        })
+    }
 })
 
 module.exports = router

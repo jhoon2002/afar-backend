@@ -60,8 +60,8 @@ const getPassword = async plainPassword => {
 }
 
 const key = "U-Koz56^--Yui"
-const expiredInterval = "120" //m
-const updateInterval = "-40" //m
+const expiredInterval = "2" //m
+const updateInterval = "-1" //m
 
 const getToken = (_id) => new Promise((resolve, reject) => {
     jwt.sign(
@@ -146,7 +146,7 @@ router.get('/check-token', async (req, res) => {
     try {
         const validToken = await checkToken(oldToken)
 
-        // console.log("validToken", validToken)
+         console.log("validToken", validToken)
 
         //토큰 갱신
         if (moment(new Date().getTime()) > moment(validToken.exp*1000).add(updateInterval, "m")) {
@@ -165,9 +165,9 @@ router.get('/check-token', async (req, res) => {
             validToken
         })
     } catch(e) {
-        // console.log(e)
-        res.status(204).json({
-            status: 204,
+         console.log(e)
+        res.status(405).json({
+            status: 405,
             msg: '유효하지 않은 토큰이거나 토큰 갱신 중 에러'
         })
     } finally {

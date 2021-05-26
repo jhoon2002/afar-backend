@@ -411,4 +411,32 @@ router.delete("/face/:_id/:filename", async function(req, res) {
     }
 })
 
+router.get('/_id/by-token', async (req, res) => {
+    const token = req.headers['token']
+
+    if (!token || token === "null") {
+        res.status(400).json({
+            status: 400, //잘못된 요청
+            msg: '토큰이 없습니다.'
+        })
+        return
+    }
+
+    try {
+        const validToken = await checkToken(token)
+        
+        res.status(200).json({
+            status: 200,
+            msg: '정상 토큰',
+            user: validToken._id
+        })
+    } catch(e) {
+        console.log(e)
+        res.status(405).json({
+            status: 405,
+            msg: '토큰 검사 중 에러'
+        })
+    }
+})
+
 module.exports = router

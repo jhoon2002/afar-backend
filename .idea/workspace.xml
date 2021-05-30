@@ -11,8 +11,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02582ac3-2144-4bdf-a6cb-cba2f8e6e820" name="Default Changelist" comment="notebook">
+      <change afterPath="$PROJECT_DIR$/public/files/faces/607e68e6bd257006b866e7ba.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/middlewares.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/token.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/files/faces/607e68e6bd257006b866e7ba.JPG" beforeDir="false" afterPath="$PROJECT_DIR$/public/files/faces/607e68e6bd257006b866e7ba.JPG" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/팁.txt" beforeDir="false" afterPath="$PROJECT_DIR$/팁.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,6 +135,8 @@
       <workItem from="1621335593583" duration="4154000" />
       <workItem from="1621822020112" duration="730000" />
       <workItem from="1621830446796" duration="13728000" />
+      <workItem from="1622108361379" duration="69945000" />
+      <workItem from="1622337946160" duration="18652000" />
     </task>
     <task id="LOCAL-00001" summary="notebook">
       <created>1614603444755</created>
@@ -179,7 +187,14 @@
       <option name="project" value="LOCAL" />
       <updated>1620053022064</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="notebook">
+      <created>1622039885076</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1622039885076</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -231,31 +246,31 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="444" y="157" width="998" height="708" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1615034996992" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1621815157438">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1622039929426">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1621815157438" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1622039929426" />
     <state x="765" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1615079352301">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1615079352301" />
-    <state x="668" y="254" width="584" height="532" key="find.popup" timestamp="1621952541891">
+    <state x="668" y="254" width="584" height="532" key="find.popup" timestamp="1622219162813">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="668" y="254" width="584" height="532" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1621952541891" />
+    <state x="668" y="254" width="584" height="532" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1622219162813" />
     <state x="666" y="307" key="git4idea.merge.GitPullDialog" timestamp="1621987662735">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="666" y="307" key="git4idea.merge.GitPullDialog/0.0.1920.1040/1920.638.1920.1040@0.0.1920.1040" timestamp="1620018953169" />
     <state x="666" y="307" key="git4idea.merge.GitPullDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1621987662735" />
-    <state x="616" y="240" key="run.anything.popup" timestamp="1621260398318">
+    <state x="616" y="240" key="run.anything.popup" timestamp="1622219809710">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="616" y="240" key="run.anything.popup/0.0.1920.1040/1920.638.1920.1040@0.0.1920.1040" timestamp="1619143037156" />
-    <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1621260398318" />
-    <state x="340" y="230" width="672" height="678" key="search.everywhere.popup" timestamp="1621933335372">
+    <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1622219809710" />
+    <state x="340" y="230" width="672" height="678" key="search.everywhere.popup" timestamp="1622251557857">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="340" y="230" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1621933335372" />
+    <state x="340" y="230" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1622251557857" />
   </component>
 </project>

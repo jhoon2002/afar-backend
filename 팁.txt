@@ -13,26 +13,37 @@ npm i -S mongoose
 npm i -S mongoose@5.11.15
 
 <cors>
-정책에 의해 원래는 다른 도메인이나 포트를 가진 서버에서 다른 서버에게 자원을 요청하는 행위가 금지되어있다.
+설치 및 설정
 
-cors는 이것을 가능하게 해준다.
+(1)npm i cors
+(2)app.js
+      const cors = require('cors')
+      app.use(cors({
+         exposedHeaders: ['newToken', 'badToken']
+      }))
 
-#cd be
-#yarn add cors
-Back-End 서버에서 루트 라우터에 해당하는 be/app.js에 다음과 같이 삽입해준다.
+<was 연결 방법 두가지>
+1. vue.config.js에서 proxy를 설정하는 방식: cors 는 불필요 proxy를 마치 같은 도메인에서 요청하는 것처럼 우회한다.
+2. 직접 호출 ex) localhost:8080 에서 http.get('http://localhost:3000/api/login') 식으로 직접 호출
+  - cors 문제가 발생하므로 위와 같이 설정해야 함
 
-const cors = require('cors') // 상단 아무곳이나 추가
-app.use(cors()) // api 위에서 사용하겠다고 선언
-
-출처: https://velog.io/@woounnan/VUEJS-Vue.js-Express-MongoDB-%EA%B5%AC%EC%B6%95
+<cors 사용시 문제점>
+모든 요청에서 prelight 요청과 본 요청 두번의 request가 발생함.
+그래서 proxy를 사용하기로 함
 
 
 <Auto Start>
 1. nodemon 설치
-npm install nodemon -g
+npm install nodemon
+*(참고) 글로벌로 설치하면(-g 옵션) nodemon 으로 서버 시작 가능
+
+2. package.json 수정
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
 
 2. express 서버 시작
-nodemon
+ npm start
 
 3. 파일 변경시 자동 리스타트 됨
 

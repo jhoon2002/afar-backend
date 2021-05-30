@@ -9,6 +9,7 @@ const moment = require("moment")
 const util = require("../apis/util.js")
 const fs = require('fs')
 const path = require('path')
+const { verifyToken, createToken } = require('./middlewares')
 
 const createSalt = () =>
     new Promise((resolve, reject) => {
@@ -60,17 +61,21 @@ const getPassword = async plainPassword => {
 }
 
 const key = "U-Koz56^--Yui"
-const expiredInterval = "2" //m
-const updateInterval = "-1" //m
 
-const getToken = (_id) => new Promise((resolve, reject) => {
+// const intervalNumber = "12"
+// const updateIntervalNumber = "-2"
+// const intervalUnit = "s"
+// const expiredInterval = intervalNumber + intervalUnit
+// const updateInterval = updateIntervalNumber + intervalUnit
+
+/*const getToken = (_id) => new Promise((resolve, reject) => {
     jwt.sign(
         {
             _id: _id
         },
         key,
         {
-            expiresIn: expiredInterval + "m",
+            expiresIn: expiredInterval,
             //issuer: 'K-Aco',
             //subject: '사용자 토큰'
         },
@@ -78,19 +83,18 @@ const getToken = (_id) => new Promise((resolve, reject) => {
             if (err) reject(err)
             resolve(token)
         })
-})
+})*/
 
-const checkToken = token => new Promise((resolve, reject) => {
+/*const checkToken = token => new Promise((resolve, reject) => {
     jwt.verify(token, key, function (err, decoded) {
         if (err) reject(err)
         resolve(decoded)
     })
-})
+})*/
 
 router.post('/login', async (req, res) => {
 
-    const userId = req.body.userId
-    const password = req.body.password
+    const { userId, password } = req.body
 
     const loggedUser = await login(userId, password)
 
@@ -103,35 +107,33 @@ router.post('/login', async (req, res) => {
     }
 
     try {
-        const token = await getToken(loggedUser._id)
+        // const token = await getToken(loggedUser._id)
+        const token = await createToken(loggedUser._id)
         console.log("생성", new Date())
-        res.status(200).json({
+
+        //토큰은 헤더에 저장
+        res.set('newToken', token)
+
+        return res.status(200).json({
             status: 200,
-            msg: '토큰 생성',
+            msg: '사용자 인증 성공',
             _id: loggedUser._id,
             userId: loggedUser.userId,
             name: loggedUser.name,
             face: loggedUser.face,
-            token
+            // token
         })
-    } catch {
-        res.status(401).json({
+    } catch(e) {
+        console.log(e)
+        return res.status(401).json({
             "status": 401, //권한 없음(인증이 필요한 상태)
             "msg": '토큰 생성 실패'
         })
-    } finally {
-        return
     }
 })
 
-router.post('/refresh-token', (req, res) => {
-    return res.status(200).json({
-        'token': 'new_token',
-        'status': 200
-    })
-})
 
-router.get('/check-token', async (req, res) => {
+/*router.get('/check-token', async (req, res) => {
     const oldToken = req.headers['token'] // || req.query.token
 
     //req에 토큰 자체가 없는 경우(400:잘못된 요청=>로그인 필요)
@@ -146,10 +148,10 @@ router.get('/check-token', async (req, res) => {
     try {
         const validToken = await checkToken(oldToken)
 
-         console.log("validToken", validToken)
+         // console.log("validToken", validToken)
 
         //토큰 갱신
-        if (moment(new Date().getTime()) > moment(validToken.exp*1000).add(updateInterval, "m")) {
+        if (moment(new Date().getTime()) > moment(validToken.exp*1000).add(updateIntervalNumber, intervalUnit)) {
             const token = await getToken(validToken._id)
             res.status(201).json({
                 status: 201,
@@ -165,18 +167,47 @@ router.get('/check-token', async (req, res) => {
             validToken
         })
     } catch(e) {
-         console.log(e)
-        res.status(405).json({
-            status: 405,
-            msg: '유효하지 않은 토큰이거나 토큰 갱신 중 에러'
+
+        console.log(e)
+
+        // 유효기간이 초과된 경우
+        if (e.name === 'TokenExpiredError') {
+            return res.status(419).json({
+                status: 419,
+                msg: '토큰 만료'
+            })
+        }
+
+        // 토큰의 비밀키가 일치하지 않는 경우
+        return res.status(401).json({
+            status: 401,
+            msg: '유효하지 않은 토큰'
         })
     } finally {
         return
     }
 
+})*/
+
+router.get('/check-token', verifyToken, async (req, res) => {
+
+    let status = 200
+    let msg = "정상 토큰"
+
+    // console.log(res.getHeaders())
+
+    if (res.getHeaders().newToken) {
+        status = 201
+        msg = "갱신 토큰"
+    }
+
+    return res.status(status).json({
+        status: status,
+        msg: msg
+    })
 })
 
-router.get('/', async function (req, res) {
+router.get('/', verifyToken, async function (req, res) {
     const payload = util.toPayload({
         filt: {
             // boardId: req.query["search.boardId"] //이 라인을 search: 으로 이동시키면 front에서 게시판 명을 검색 옵션으로 사용 가능할 듯
@@ -210,7 +241,19 @@ router.get('/', async function (req, res) {
     })
 })
 
-router.get('/:id', async function (req, res) {
+/*router.get('/:id', async function (req, res) {
+    try {
+        let user = await User.findById(req.params.id)
+        // console.log(user)
+        res.status(200).json({
+            user
+        })
+    } catch(e) {
+        console.log(e)
+    }
+})*/
+
+router.get('/:id', verifyToken, async function (req, res) {
     try {
         let user = await User.findById(req.params.id)
         // console.log(user)
@@ -222,6 +265,7 @@ router.get('/:id', async function (req, res) {
     }
 })
 
+//is-userid 와 is-jumin 은 사용자 등록 시, 사용되므로 verifyToken 사용 안함, 향후 별도 보안 설정 필요
 router.post('/is-userid', async (req, res) => {
     const ret = await User.find( { userId: req.body.userId }, { userId: 1 } )
     if (ret.length > 0) {
@@ -254,10 +298,7 @@ router.post('/is-jumin', async (req, res) => {
     return
 })
 
-router.put("/:id", async (req, res) => {
-
-    // console.log(req.params.id)
-    // console.log(req.body)
+router.put("/:id", verifyToken, async (req, res) => {
 
     let updateObj = req.body
     updateObj.updated = new Date
@@ -277,7 +318,7 @@ router.put("/:id", async (req, res) => {
     }
 })
 
-router.post("/", async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
     try {
         const now = new Date()
         //console.log("now", now)
@@ -305,7 +346,7 @@ router.post("/", async (req, res) => {
     }
 })
 
-router.get("/is-useridname/:keyword", async (req, res) => {
+router.get("/is-useridname/:keyword", verifyToken, async (req, res) => {
     // console.log("req.params.keyword", req.params.keyword,)
     try {
         let users = await User.find({
@@ -338,7 +379,7 @@ const storage = multer.diskStorage({
 })
 let upload = multer({ storage: storage })
 
-router.post("/face", upload.single("file"), async function(req, res) {
+router.post("/face", verifyToken, upload.single("file"), async function(req, res) {
     //multer의 처리 결과는 req.file 로 받음
 
     try {
@@ -362,7 +403,7 @@ router.post("/face", upload.single("file"), async function(req, res) {
     }
 })
 
-router.delete("/face/:_id/:filename", async function(req, res) {
+router.delete("/face/:_id/:filename", verifyToken, async function(req, res) {
 
     const filePath = path.join(__dirname, "../" + publicdir + facedir, req.params.filename)
 
@@ -411,9 +452,9 @@ router.delete("/face/:_id/:filename", async function(req, res) {
     }
 })
 
-router.get('/_id/by-token', async (req, res) => {
-    const token = req.headers['token']
+/*router.get('/_id/:by', async (req, res) => {
 
+    const token = req.headers['token']
     if (!token || token === "null") {
         res.status(400).json({
             status: 400, //잘못된 요청
@@ -421,14 +462,12 @@ router.get('/_id/by-token', async (req, res) => {
         })
         return
     }
-
     try {
         const validToken = await checkToken(token)
-        
         res.status(200).json({
             status: 200,
             msg: '정상 토큰',
-            user: validToken._id
+            _id: validToken._id
         })
     } catch(e) {
         console.log(e)
@@ -437,6 +476,17 @@ router.get('/_id/by-token', async (req, res) => {
             msg: '토큰 검사 중 에러'
         })
     }
+
+})*/
+
+router.get('/_id/:by', verifyToken, async (req, res) => {
+
+    return res.status(200).json({
+        status: 200,
+        msg: '정상 토큰',
+        _id: req._id
+    })
+
 })
 
 module.exports = router

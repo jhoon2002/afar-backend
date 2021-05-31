@@ -2,9 +2,9 @@ const jwt = require('jsonwebtoken')
 const moment = require("moment")
 
 const key = "U-Koz56^--Yui"
-const intervalNumber = "4"
-const updateIntervalNumber = "-2"
-const intervalUnit = "s"
+const intervalNumber = "60"
+const updateIntervalNumber = "-30"
+const intervalUnit = "m"
 const expiredInterval = intervalNumber + intervalUnit
 //const updateInterval = updateIntervalNumber + intervalUnit
 
@@ -66,7 +66,7 @@ module.exports.verifyToken = async (req, res, next) => {
 
         console.log("\x1b[30m ..(error 419 401)", "Token was deleted(expired, bad key, etc..)", e)
 
-        res.set("verified-token", token)
+        res.set("verified-token", token) //bad token 이라도 응답하는 이유는 front 에서 기존 token 을 logging 할 필요 있음
 
         if (e.name === 'TokenExpiredError') {
 

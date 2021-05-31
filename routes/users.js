@@ -46,7 +46,8 @@ async function login(userId, plainPassword) {
         _id: user._id,
         userId: user.userId,
         name: user.name,
-        face: user.face
+        face: user.face,
+        color: user.color
     }
     return false
 }
@@ -121,6 +122,7 @@ router.post('/login', async (req, res) => {
             userId: loggedUser.userId,
             name: loggedUser.name,
             face: loggedUser.face,
+            color: loggedUser.color
             // token
         })
     } catch(e) {

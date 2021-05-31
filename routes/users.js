@@ -112,7 +112,7 @@ router.post('/login', async (req, res) => {
         console.log("생성", new Date())
 
         //토큰은 헤더에 저장
-        res.set('newToken', token)
+        res.set('verified-token', token)
 
         return res.status(200).json({
             status: 200,
@@ -191,19 +191,18 @@ router.post('/login', async (req, res) => {
 
 router.get('/check-token', verifyToken, async (req, res) => {
 
-    let status = 200
-    let msg = "정상 토큰"
+     //console.log(res.getHeaders()["verified-token"])
+     //console.log(req.headers.token)
 
-    // console.log(res.getHeaders())
-
-    if (res.getHeaders().newToken) {
-        status = 201
-        msg = "갱신 토큰"
-    }
-
-    return res.status(status).json({
-        status: status,
-        msg: msg
+    //if (res.getHeaders()["verified-token"] !== req.headers.token) {
+    //    return res.status(201).json({
+    //        status: 201,
+    //        msg: "갱신 토큰"
+    //    })
+    //}
+    return res.status(200).json({
+        status: 200,
+        msg: "정상 또는 갱신 토큰"
     })
 })
 

@@ -3,10 +3,10 @@ const moment = require("moment")
 
 const key = "U-Koz56^--Yui"
 const intervalNumber = "4"
-const updateIntervalNumber = "-3"
+const updateIntervalNumber = "-2"
 const intervalUnit = "s"
 const expiredInterval = intervalNumber + intervalUnit
-const updateInterval = updateIntervalNumber + intervalUnit
+//const updateInterval = updateIntervalNumber + intervalUnit
 
 /*
 jwt 시간단위가 vue-cookies와 다름에 유의
@@ -39,11 +39,11 @@ module.exports.verifyToken = async (req, res, next) => {
 
     //req에 토큰 자체가 없는 경우
     if (!token || token === "null") {
-        res.set("badToken", "empty")
+        res.set("verified-token", "")
         console.log("\x1b[30m ..(error 400)", "Bad token(no token)")
         return res.status(400).json({
             status: 400,
-            msg: '토큰 없음'
+            msg: "NO_TOKEN"
         })
     }
 
@@ -51,23 +51,22 @@ module.exports.verifyToken = async (req, res, next) => {
         const { _id, exp } = await jwt.verify(token, key)
         //토큰 갱신
 
+        req._id = _id
         if (moment(new Date().getTime()) > moment(exp * 1000).add(updateIntervalNumber, intervalUnit)) {
-            const token = await module.exports.createToken(_id)
-            req._id = _id
-            res.set('newToken', token)
+            const newToken = await module.exports.createToken(_id)
+            res.set('verified-token', newToken)
             console.log("\x1b[33m ..(regen)", new Date(), new Date().getTime())
             return next()
         }
-        req._id = _id
-        res.set('newToken', '') //이 셋팅이' 없으면 매번 headers에 token을 보냄. 정확한 원인은 파악 안됨.
+        res.set('verified-token', token) //이 셋팅이' 없으면 매번 headers에 token을 보냄. 정확한 원인은 파악 안됨.
         console.log("\x1b[34m ..(OK)", new Date(), new Date().getTime())
         return next()
 
     } catch (e) {
 
-        console.log("\x1b[30m ..(error 419 401)", "Bad token(expired, bad key, etc..)", e)
+        console.log("\x1b[30m ..(error 419 401)", "Token was deleted(expired, bad key, etc..)", e)
 
-        res.set("badToken", token)
+        res.set("verified-token", token)
 
         if (e.name === 'TokenExpiredError') {
 
@@ -92,14 +91,14 @@ module.exports.verifyToken = async (req, res, next) => {
 
             return res.status(419).json({
                 status: 419,
-                msg: '토큰 만료'
+                msg: 'EXPIRED_TOKEN'
             })
         }
 
         // 그 밖의 모든 경우, 주로 토큰의 비밀키가 일치하지 않는 경우
         return res.status(401).json({
             status: 401,
-            msg: '유효하지 않은 토큰'
+            msg: 'INVALID_TOKEN'
         });
     }
 }

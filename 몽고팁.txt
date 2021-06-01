@@ -1,0 +1,21 @@
+// 콜렉션 내 모든 도큐 update
+db.users.updateMany{
+    {},
+    {
+        $set: {
+            face: "none.svg"
+        }
+    }
+}
+
+// 콜렉션 내 모든 도큐먼트 status 필드 삭제
+// (아마도) update...multi:true === updateMany
+db.users.update(
+    {},
+    {
+        $unset: {
+            status: 1
+        }
+    },
+     { multi: true}
+)

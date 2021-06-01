@@ -38,7 +38,7 @@ const makePasswordHashed = (plainPassword, salt) =>
 
 async function login(userId, plainPassword) {
     if (!userId || !plainPassword) return false
-    const user = await User.findOne({ userId: userId }, [ "userId", "name", "salt", "password", "face"]).exec()
+    const user = await User.findOne({ userId: userId }, [ "userId", "name", "salt", "password", "face", "color"]).exec()
     //console.log(user)
     if (!user) return false
     const password = await makePasswordHashed(plainPassword, user.salt)
@@ -302,7 +302,7 @@ router.post('/is-jumin', async (req, res) => {
 router.put("/:id", verifyToken, async (req, res) => {
 
     let updateObj = req.body
-    updateObj.updated = new Date
+    updateObj.updated = new Date()
 
     try {
         const user = await User.findByIdAndUpdate(req.params.id, { $set: updateObj },{ new: true })

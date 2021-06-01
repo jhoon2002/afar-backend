@@ -16,6 +16,7 @@ let userSchema = new Schema({
         part: String
     },
     face: String,
+    //faceURL: String,
     color: String,
     created: { type:Date, default:Date.now },
     updated: { type:Date, default:Date.now }

@@ -11,10 +11,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02582ac3-2144-4bdf-a6cb-cba2f8e6e820" name="Default Changelist" comment="notebook">
+      <change afterPath="$PROJECT_DIR$/public/files/faces/607e68e6bd257006b866e7ba.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/files/faces/607e68e6bd257006b866e7ba.JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,6 +131,7 @@
       <workItem from="1621830446796" duration="13728000" />
       <workItem from="1622108361379" duration="69945000" />
       <workItem from="1622337946160" duration="18652000" />
+      <workItem from="1622615239051" duration="682000" />
     </task>
     <task id="LOCAL-00001" summary="notebook">
       <created>1614603444755</created>
@@ -254,11 +253,11 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="668" y="254" width="584" height="532" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1622471122167" />
-    <state x="666" y="307" key="git4idea.merge.GitPullDialog" timestamp="1622503258957">
+    <state x="666" y="307" key="git4idea.merge.GitPullDialog" timestamp="1622590389879">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="666" y="307" key="git4idea.merge.GitPullDialog/0.0.1920.1040/1920.638.1920.1040@0.0.1920.1040" timestamp="1620018953169" />
-    <state x="666" y="307" key="git4idea.merge.GitPullDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1622503258957" />
+    <state x="666" y="307" key="git4idea.merge.GitPullDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1622590389879" />
     <state x="616" y="240" key="run.anything.popup" timestamp="1622219809710">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

@@ -38,7 +38,7 @@ const makePasswordHashed = (plainPassword, salt) =>
 
 async function login(userId, plainPassword) {
     if (!userId || !plainPassword) return false
-    const user = await User.findOne({ userId: userId }, [ "userId", "name", "salt", "password", "face", "color"]).exec()
+    const user = await User.findOne({ userId: userId }, [ "salt", "password", "userId", "name", "jumin", "cellphone", "email", "face", "color"]).exec()
     //console.log(user)
     if (!user) return false
     const password = await makePasswordHashed(plainPassword, user.salt)
@@ -46,6 +46,9 @@ async function login(userId, plainPassword) {
         _id: user._id,
         userId: user.userId,
         name: user.name,
+        jumin: user.jumin,
+        cellphone: user.cellphone,
+        email: user.email,
         face: user.face,
         color: user.color
     }
@@ -95,20 +98,23 @@ const key = "U-Koz56^--Yui"
 
 router.post('/login', async (req, res) => {
 
-    const { userId, password } = req.body
-
-    const loggedUser = await login(userId, password)
-
-    if (!loggedUser) {
-        res.status(403).json({
-            "status": 403, //금지됨(비인가 상태)
-            "msg": '로그인 실패'
-        })
-        return
-    }
+    const { userId, password: plainPassword } = req.body
 
     try {
-        // const token = await getToken(loggedUser._id)
+    
+        if (!userId || !plainPassword) throw new Error("NO_ID_PASSWORD")
+        
+        const loggedUser = await User.findOne(
+            { userId: userId },
+            [ "salt", "password", "userId", "name", "jumin", "cellphone", "email", "face", "color"]
+        ).exec()
+
+        if (!loggedUser) throw new Error("UNCORRECTED_ID")
+        
+        const password = await makePasswordHashed(plainPassword, loggedUser.salt)
+    
+        if (password !== loggedUser.password) throw new Error("UNCORRECTED_PASSWORD")
+    
         const token = await createToken(loggedUser._id)
         console.log("생성", new Date())
 
@@ -118,22 +124,22 @@ router.post('/login', async (req, res) => {
         return res.status(200).json({
             status: 200,
             msg: '사용자 인증 성공',
-            _id: loggedUser._id,
-            userId: loggedUser.userId,
-            name: loggedUser.name,
-            face: loggedUser.face,
-            color: loggedUser.color
-            // token
+            user: loggedUser
         })
     } catch(e) {
-        console.log(e)
+        console.log(e.message)
+        if (e.message === "UNCORRECTED_ID" || e.message === "UNCORRECTED_PASSWORD") {
+            return res.status(403).json({
+                "status": 403,
+                "msg": '아이디 또는 비밀번호가 일치하지 않음'
+            })
+        }
         return res.status(401).json({
-            "status": 401, //권한 없음(인증이 필요한 상태)
-            "msg": '토큰 생성 실패'
+            "status": 401,
+            "msg": '기타 사유로 예외 발생'
         })
     }
 })
-
 
 /*router.get('/check-token', async (req, res) => {
     const oldToken = req.headers['token'] // || req.query.token
@@ -315,6 +321,49 @@ router.put("/:id", verifyToken, async (req, res) => {
         return res.status(304).json({
             status: 304,
             msg: "수정되지 않음"
+        })
+    }
+})
+
+router.post("/new", async (req, res) => {
+
+    const { body: user } = req
+
+    try {
+
+        throw new Error("00")
+
+        const salt = await createSalt()
+
+        const password = await makePasswordHashed(user.password, salt)
+
+        const now = new Date()
+        //console.log("now", now)
+        const savedUser = await User.create({
+            _id: new mongoose.Types.ObjectId(),
+            userId: user.userId,
+            password: password,
+            salt: salt,
+            name: user.name,
+            jumin: user.jumin,
+            cellphone: user.cellphone,
+            email: user.email,
+            face: user.face,
+            color: user.color,
+            created: now,
+            updated: now
+        })
+        // console.log("user.created", user.created)
+        return res.status(200).json({
+            status: 200,
+            msg: "생성 완료",
+            user: savedUser
+        })
+    } catch(e) {
+        console.log(e)
+        return res.status(304).json({
+            status: 304,
+            msg: "생성 못함"
         })
     }
 })

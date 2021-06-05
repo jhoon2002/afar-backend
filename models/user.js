@@ -7,16 +7,10 @@ let userSchema = new Schema({
     password: String,
     salt: String,
     name: String,
-    no: String,
     jumin: String,
     cellphone: String,
     email: String,
-    status: {
-        type: String,
-        part: String
-    },
     face: String,
-    //faceURL: String,
     color: String,
     created: { type:Date, default:Date.now },
     updated: { type:Date, default:Date.now }

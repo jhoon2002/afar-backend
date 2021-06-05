@@ -325,13 +325,12 @@ router.put("/:id", verifyToken, async (req, res) => {
     }
 })
 
+//사용자 등록
 router.post("/new", async (req, res) => {
 
     const { body: user } = req
 
     try {
-
-        throw new Error("00")
 
         const salt = await createSalt()
 

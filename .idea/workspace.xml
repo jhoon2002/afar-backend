@@ -11,7 +11,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="02582ac3-2144-4bdf-a6cb-cba2f8e6e820" name="Default Changelist" comment="notebook">
+      <change afterPath="$PROJECT_DIR$/classes/errors.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/응답원칙.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apis/util.js" beforeDir="false" afterPath="$PROJECT_DIR$/apis/util.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.js" afterDir="false" />
     </list>
@@ -65,15 +69,18 @@
     <property name="ts.external.directory.path" value="X:\Intellij\IntelliJ IDEA 2020.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\workspace\afar-backend\classes" />
+      <recent name="D:\workspace\afar-backend\classes\errors" />
+      <recent name="D:\workspace\afar-backend" />
+      <recent name="X:\workspace\afar-backend\public" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\workspace\afar-backend\public\files\faces" />
       <recent name="D:\workspace\afar-backend\models" />
       <recent name="D:\workspace\afar-backend\routes" />
       <recent name="X:\workspace\afar-backend\routes" />
       <recent name="D:\workspace\afar-backend" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="X:\workspace\afar-backend\public" />
     </key>
   </component>
   <component name="SvnConfiguration">
@@ -256,19 +263,19 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="668" y="254" width="584" height="532" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1622699947146" />
-    <state x="666" y="307" key="git4idea.merge.GitPullDialog" timestamp="1622590389879">
+    <state x="666" y="307" key="git4idea.merge.GitPullDialog" timestamp="1622881596313">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="666" y="307" key="git4idea.merge.GitPullDialog/0.0.1920.1040/1920.638.1920.1040@0.0.1920.1040" timestamp="1620018953169" />
-    <state x="666" y="307" key="git4idea.merge.GitPullDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1622590389879" />
+    <state x="666" y="307" key="git4idea.merge.GitPullDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1622881596313" />
     <state x="616" y="240" key="run.anything.popup" timestamp="1622219809710">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="616" y="240" key="run.anything.popup/0.0.1920.1040/1920.638.1920.1040@0.0.1920.1040" timestamp="1619143037156" />
     <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1622219809710" />
-    <state x="340" y="230" width="672" height="678" key="search.everywhere.popup" timestamp="1622704358351">
+    <state x="340" y="230" width="672" height="678" key="search.everywhere.popup" timestamp="1622982839882">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="340" y="230" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1622704358351" />
+    <state x="340" y="230" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1622982839882" />
   </component>
 </project>

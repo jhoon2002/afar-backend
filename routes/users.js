@@ -10,6 +10,7 @@ const util = require("../apis/util.js")
 const fs = require('fs')
 const path = require('path')
 const { verifyToken, createToken } = require('./middlewares')
+const NoDataError = require('../classes/errors.js')
 
 const createSalt = () =>
     new Promise((resolve, reject) => {
@@ -290,19 +291,37 @@ router.post('/is-userid', async (req, res) => {
 })
 
 router.post('/is-jumin', async (req, res) => {
-    const ret = await User.find( { jumin: req.body.jumin }, { jumin: 1 } )
-    if (ret.length > 0) {
-        return res.status(200).json({
-            'status': 200,
-            'msg': '같은 주민등록번호 존재'
+    try {
+        const ret = await User.findOne({jumin: req.body.jumin}, {userId: 1, jumin: 1, cellphone: 1})
+
+        if (!ret) {
+            return res.status(204).json({ //미등록자
+                status: 204,
+                msg: '미등록자(같은 주민등록번호 미존재)'
+            })
+        }
+        if (ret.userId && ret._id) { // 정상 등록자: _id와 id 모두 있음
+            return res.status(200).json({
+                status: 200,
+                msg: '정상 등록자(같은 주민등록번호 존재, 아이디 존재)'
+            })
+            return
+        }
+        if (ret._id) { // 사전 등록자: _id 있고 id 없음
+            return res.status(201).json({
+                status: 201,
+                msg: '사전 등록자(같은 주민등록번호 존재, 아이디 미존재)'
+            })
+            return
+        }
+        throw new Error("UNKNOWN_ERROR")
+    } catch(e) {
+        console.log(e)
+        return res.status(400).json({
+            status: 400,
+            msg: '그 밖의 에러'
         })
-        return
     }
-    return res.status(204).json({
-        'status': 204,
-        'msg': '같은 주민등록번호 미존재'
-    })
-    return
 })
 
 router.put("/:id", verifyToken, async (req, res) => {
@@ -328,7 +347,7 @@ router.put("/:id", verifyToken, async (req, res) => {
 //사용자 등록
 router.post("/new", async (req, res) => {
 
-    const { body: user } = req
+    const { body: { user } } = req
 
     try {
 
@@ -338,6 +357,8 @@ router.post("/new", async (req, res) => {
 
         const now = new Date()
         //console.log("now", now)
+
+        //db에 저장되는 필드 순서를 감안하여 일일히 나열함
         const savedUser = await User.create({
             _id: new mongoose.Types.ObjectId(),
             userId: user.userId,
@@ -349,6 +370,13 @@ router.post("/new", async (req, res) => {
             email: user.email,
             face: user.face,
             color: user.color,
+            agree: {
+                terms: user.agree.terms,
+                info: user.agree.info,
+                jumin: user.agree.jumin,
+                email: user.agree.email,
+                sms: user.agree.sms
+            },
             created: now,
             updated: now
         })
@@ -537,5 +565,21 @@ router.get('/_id/:by', verifyToken, async (req, res) => {
     })
 
 })
+
+router.get("/jumin/:jumin", util.wrapAsync(async (req, res) => {
+
+    const { jumin } = req.params
+
+    const user = await User.findOne({ jumin: jumin }, { cellphone: 1, email: 1 } )
+
+    if (!user) throw new NoDataError("NO_DATA")
+
+    return res.status(200).json({
+        status: 200,
+        msg: "사용자 정보",
+        user: user
+    })
+
+}))
 
 module.exports = router

@@ -45,3 +45,11 @@ module.exports.toPayload = function(queryStringObj) {
 module.exports.getFileExt = function(filename) {
     return filename.substring(filename.lastIndexOf('.') + 1, filename.length)
 }
+
+module.exports.wrapAsync = function(fn) {
+    return function (req, res, next) {
+        // 모든 오류를 .catch() 처리하고 체인의 next() 미들웨어에 전달하세요
+        // (이 경우에는 오류 처리기)
+        fn(req, res, next).catch(next)
+    }
+}

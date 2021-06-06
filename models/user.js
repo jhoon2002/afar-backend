@@ -12,11 +12,13 @@ let userSchema = new Schema({
     email: String,
     face: String,
     color: String,
-    hasRule: Boolean,
-    hasIndi: Boolean,
-    hasJumin: Boolean,
-    hasEmail: Boolean,
-    hasSms: Boolean,
+    agree: {
+        terms: Boolean,
+        info: Boolean,
+        jumin: Boolean,
+        email: Boolean,
+        sms: Boolean
+    },
     created: { type:Date, default:Date.now },
     updated: { type:Date, default:Date.now }
 })

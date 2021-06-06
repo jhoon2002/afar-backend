@@ -35,23 +35,26 @@ app.use("/api/organs", organsRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404))
+    next(createError(404))
 })
 
 
 /*
  * 이하 Error handler
  */
-const NoDataError = require('./classes/errors.js')
+const Errors = require('./classes/errors.js')
 
-// 모든 NoDataError 400으로
+// NoDataError: 400
 app.use(function (error, req, res, next) {
-  if (error instanceof NoDataError) {
-    res.status(400).json({
-      type: "NoDataError",
-      message: error.message,
-    })
-  }
+    if (error instanceof Errors.NoDataError) {
+        console.log(error)
+        return res.status(400).json({
+            status: 400,
+            type: "NoDataError",
+            msg: error.message,
+        })
+    }
+    next(error)
 })
 
 // 모든 Mongo DB 상의 에러는 503으로
@@ -67,13 +70,13 @@ app.use(function (error, req, res, next) {
 
 // 나머지 에러
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message
-  res.locals.error = req.app.get('env') === 'development' ? err : {}
+    // set locals, only providing error in development
+    res.locals.message = err.message
+    res.locals.error = req.app.get('env') === 'development' ? err : {}
 
-  // render the error page
-  res.status(err.status || 500)
-  res.render('error')
+    // render the error page
+    res.status(err.status || 500)
+    res.render('error')
 })
 
 // app.use('/upload', express.static('upload'));

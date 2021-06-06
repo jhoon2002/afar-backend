@@ -10,7 +10,7 @@ const util = require("../apis/util.js")
 const fs = require('fs')
 const path = require('path')
 const { verifyToken, createToken } = require('./middlewares')
-const NoDataError = require('../classes/errors.js')
+const { NoDataError, TokenError } = require('../classes/errors.js')
 
 const createSalt = () =>
     new Promise((resolve, reject) => {
@@ -572,7 +572,7 @@ router.get("/jumin/:jumin", util.wrapAsync(async (req, res) => {
 
     const user = await User.findOne({ jumin: jumin }, { cellphone: 1, email: 1 } )
 
-    if (!user) throw new NoDataError("NO_DATA")
+    if (!user) throw new NoDataError("주민등록번호에 해당하는 사용자 없음")
 
     return res.status(200).json({
         status: 200,

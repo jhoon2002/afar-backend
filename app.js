@@ -4,6 +4,7 @@ let path = require('path')
 let cookieParser = require('cookie-parser')
 let logger = require('morgan')
 // const cors = require('cors')
+const jwt = require('jsonwebtoken')
 
 let indexRouter = require('./routes/index')
 let usersRouter = require('./routes/users')
@@ -50,7 +51,45 @@ app.use(function (error, req, res, next) {
         console.log(error)
         return res.status(400).json({
             status: 400,
-            type: "NoDataError",
+            type: "NO_DATA",
+            msg: error.message,
+        })
+    }
+    next(error)
+})
+
+// NO 토큰 에러
+app.use(function (error, req, res, next) {
+    if (error instanceof Errors.NoTokenError) {
+        console.log(error)
+        return res.status(400).json({
+            status: 400,
+            type: "DELETE_REQUIRED",
+            msg: error.message,
+        })
+    }
+    next(error)
+})
+
+//JWT 토큰 에러
+app.use(function (error, req, res, next) {
+
+    const logContents = "\x1b[30m ..(error 419 401) Token was deleted(expired, bad key, etc..)"
+
+    if (error instanceof jwt.TokenExpiredError) {
+        console.log(logContents, error)
+        return res.status(419).json({
+            status: 419,
+            type: "DELETE_REQUIRED",
+            msg: error.message,
+        })
+    }
+    if ( error instanceof jwt.JsonWebTokenError
+        || error instanceof jwt.NotBeforeError ) {
+        console.log(logContents, error)
+        return res.status(401).json({
+            status: 401,
+            type: "DELETE_REQUIRED",
             msg: error.message,
         })
     }

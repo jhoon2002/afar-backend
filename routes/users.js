@@ -65,38 +65,7 @@ const getPassword = async plainPassword => {
     }
 }
 
-const key = "U-Koz56^--Yui"
-
-// const intervalNumber = "12"
-// const updateIntervalNumber = "-2"
-// const intervalUnit = "s"
-// const expiredInterval = intervalNumber + intervalUnit
-// const updateInterval = updateIntervalNumber + intervalUnit
-
-/*const getToken = (_id) => new Promise((resolve, reject) => {
-    jwt.sign(
-        {
-            _id: _id
-        },
-        key,
-        {
-            expiresIn: expiredInterval,
-            //issuer: 'K-Aco',
-            //subject: '사용자 토큰'
-        },
-        (err, token) => {
-            if (err) reject(err)
-            resolve(token)
-        })
-})*/
-
-/*const checkToken = token => new Promise((resolve, reject) => {
-    jwt.verify(token, key, function (err, decoded) {
-        if (err) reject(err)
-        resolve(decoded)
-    })
-})*/
-
+// 사용자 id 와 비밀번호를 받아...
 router.post('/login', async (req, res) => {
 
     const { userId, password: plainPassword } = req.body
@@ -142,62 +111,7 @@ router.post('/login', async (req, res) => {
     }
 })
 
-/*router.get('/check-token', async (req, res) => {
-    const oldToken = req.headers['token'] // || req.query.token
-
-    //req에 토큰 자체가 없는 경우(400:잘못된 요청=>로그인 필요)
-    if (!oldToken || oldToken === "null") {
-        res.status(400).json({
-            "status": 400, //잘못된 요청
-            "msg": '토큰이 없습니다.'
-        })
-        return
-    }
-
-    try {
-        const validToken = await checkToken(oldToken)
-
-         // console.log("validToken", validToken)
-
-        //토큰 갱신
-        if (moment(new Date().getTime()) > moment(validToken.exp*1000).add(updateIntervalNumber, intervalUnit)) {
-            const token = await getToken(validToken._id)
-            res.status(201).json({
-                status: 201,
-                msg: '토큰 갱신',
-                token
-            })
-            console.log("갱신", new Date())
-            return
-        }
-        res.status(200).json({
-            status: 200,
-            msg: '정상 토큰',
-            validToken
-        })
-    } catch(e) {
-
-        console.log(e)
-
-        // 유효기간이 초과된 경우
-        if (e.name === 'TokenExpiredError') {
-            return res.status(419).json({
-                status: 419,
-                msg: '토큰 만료'
-            })
-        }
-
-        // 토큰의 비밀키가 일치하지 않는 경우
-        return res.status(401).json({
-            status: 401,
-            msg: '유효하지 않은 토큰'
-        })
-    } finally {
-        return
-    }
-
-})*/
-
+//헤더로 토큰을 받아 검사 결과를 status 와 data.type data.msg 등으로 반환
 router.get('/check-token', verifyToken, async (req, res) => {
 
      //console.log(res.getHeaders()["verified-token"])
@@ -215,6 +129,7 @@ router.get('/check-token', verifyToken, async (req, res) => {
     })
 })
 
+//검색 내역을 받아 카운트와 사용자 배열을 반환
 router.get('/', verifyToken, async function (req, res) {
     const payload = util.toPayload({
         filt: {
@@ -249,18 +164,7 @@ router.get('/', verifyToken, async function (req, res) {
     })
 })
 
-/*router.get('/:id', async function (req, res) {
-    try {
-        let user = await User.findById(req.params.id)
-        // console.log(user)
-        res.status(200).json({
-            user
-        })
-    } catch(e) {
-        console.log(e)
-    }
-})*/
-
+// 사용자 _id를 받아 해당 사용자 정보를 반환
 router.get('/:id', verifyToken, async function (req, res) {
     try {
         let user = await User.findById(req.params.id)
@@ -274,6 +178,7 @@ router.get('/:id', verifyToken, async function (req, res) {
 })
 
 //is-userid 와 is-jumin 은 사용자 등록 시, 사용되므로 verifyToken 사용 안함, 향후 별도 보안 설정 필요
+// 사용자 id 를 받아 해당 사용자 유무를 status 코드로 반환
 router.post('/is-userid', async (req, res) => {
     const ret = await User.find( { userId: req.body.userId }, { userId: 1 } )
     if (ret.length > 0) {
@@ -290,40 +195,19 @@ router.post('/is-userid', async (req, res) => {
     return
 })
 
-router.post('/is-jumin', async (req, res) => {
-    try {
-        const ret = await User.findOne({jumin: req.body.jumin}, {userId: 1, jumin: 1, cellphone: 1})
+// todo: 향후 삭제 요망
+// router.post('/is-jumin', util.wrapAsync(async (req, res) => {
+//     const user = await User.findOne({ jumin: req.body.jumin }, { userId: 1, jumin: 1, cellphone: 1 })
+//
+//     // 검색 결과, 해당 사용자가 없을 경우 user === null 이 됨
+//
+//     return res.status(200).json({
+//         status: 200,
+//         user: user
+//     })
+// }))
 
-        if (!ret) {
-            return res.status(204).json({ //미등록자
-                status: 204,
-                msg: '미등록자(같은 주민등록번호 미존재)'
-            })
-        }
-        if (ret.userId && ret._id) { // 정상 등록자: _id와 id 모두 있음
-            return res.status(200).json({
-                status: 200,
-                msg: '정상 등록자(같은 주민등록번호 존재, 아이디 존재)'
-            })
-            return
-        }
-        if (ret._id) { // 사전 등록자: _id 있고 id 없음
-            return res.status(201).json({
-                status: 201,
-                msg: '사전 등록자(같은 주민등록번호 존재, 아이디 미존재)'
-            })
-            return
-        }
-        throw new Error("UNKNOWN_ERROR")
-    } catch(e) {
-        console.log(e)
-        return res.status(400).json({
-            status: 400,
-            msg: '그 밖의 에러'
-        })
-    }
-})
-
+// 사용자 id와 사용 정보를 받아 기존 사용자 document 를 업데이트
 router.put("/:id", verifyToken, async (req, res) => {
 
     let updateObj = req.body
@@ -344,7 +228,7 @@ router.put("/:id", verifyToken, async (req, res) => {
     }
 })
 
-//사용자 등록
+//사용자 정보를 받아 새로운 사용자 저장
 router.post("/new", async (req, res) => {
 
     const { body: { user } } = req
@@ -395,6 +279,7 @@ router.post("/new", async (req, res) => {
     }
 })
 
+// todo: 사용 안하는 듯하니 향후 확인 필요
 router.post("/", verifyToken, async (req, res) => {
     try {
         const now = new Date()
@@ -423,6 +308,7 @@ router.post("/", verifyToken, async (req, res) => {
     }
 })
 
+//키워드를 받아 사용자 id 또는 이름에서 검색하여 사용자 배열을 반환
 router.get("/is-useridname/:keyword", verifyToken, async (req, res) => {
     // console.log("req.params.keyword", req.params.keyword,)
     try {
@@ -456,6 +342,7 @@ const storage = multer.diskStorage({
 })
 let upload = multer({ storage: storage })
 
+//_id 와 파일명을 받아, 파일을 디스크에 저장하고 파일명을 db 에 저장
 router.post("/face", verifyToken, upload.single("file"), async function(req, res) {
     //multer의 처리 결과는 req.file 로 받음
 
@@ -480,6 +367,7 @@ router.post("/face", verifyToken, upload.single("file"), async function(req, res
     }
 })
 
+//사용자 face 파일명을 받아서 삭제
 router.delete("/face/:_id/:filename", verifyToken, async function(req, res) {
 
     const filePath = path.join(__dirname, "../" + publicdir + facedir, req.params.filename)
@@ -529,33 +417,7 @@ router.delete("/face/:_id/:filename", verifyToken, async function(req, res) {
     }
 })
 
-/*router.get('/_id/:by', async (req, res) => {
-
-    const token = req.headers['token']
-    if (!token || token === "null") {
-        res.status(400).json({
-            status: 400, //잘못된 요청
-            msg: '토큰이 없습니다.'
-        })
-        return
-    }
-    try {
-        const validToken = await checkToken(token)
-        res.status(200).json({
-            status: 200,
-            msg: '정상 토큰',
-            _id: validToken._id
-        })
-    } catch(e) {
-        console.log(e)
-        res.status(405).json({
-            status: 405,
-            msg: '토큰 검사 중 에러'
-        })
-    }
-
-})*/
-
+//토큰을 받아서 _id 를 반환
 router.get('/_id/:by', verifyToken, async (req, res) => {
 
     return res.status(200).json({
@@ -566,14 +428,15 @@ router.get('/_id/:by', verifyToken, async (req, res) => {
 
 })
 
+//주민번호를 받아서 해당 사용자를 반환
 router.get("/jumin/:jumin", util.wrapAsync(async (req, res) => {
 
     const { jumin } = req.params
 
-    const user = await User.findOne({ jumin: jumin }, { cellphone: 1, email: 1 } )
+    const user = await User.findOne({ jumin: jumin }, { userId: 1, cellphone: 1, email: 1 } )
 
-    if (!user) throw new NoDataError("주민등록번호에 해당하는 사용자 없음")
-
+    // if (!user) throw new NoDataError("주민등록번호에 해당하는 사용자 없음")  // 400
+    // 해당 user 가 없는 경우에도 200 으로 응답 => Front 에서 분기하는 걸로 최종 결론
     return res.status(200).json({
         status: 200,
         msg: "사용자 정보",

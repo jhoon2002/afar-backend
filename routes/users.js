@@ -1,6 +1,6 @@
-let express = require('express')
-let router = express.Router()
-let User = require("../models/user.js")
+const express = require('express')
+const router = express.Router()
+const User = require("../models/user.js")
 let mongoose = require('mongoose')
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
@@ -12,37 +12,12 @@ const path = require('path')
 const { verifyToken, createToken, encryptJumin } = require('./middlewares')
 const { NoDataError, TokenError } = require('../classes/errors.js')
 
-const createSalt = () =>
-    new Promise((resolve, reject) => {
-        crypto.randomBytes(64, (err, buf) => {
-            if (err) reject(err);
-            resolve(buf.toString('base64'));
-        });
-    });
-
-const createHashedPassword = (plainPassword) =>
-    new Promise(async (resolve, reject) => {
-        const salt = await createSalt();
-        crypto.pbkdf2(plainPassword, salt, 9999, 64, 'sha512', (err, key) => {
-            if (err) reject(err);
-            resolve({ password: key.toString('base64'), salt });
-        });
-    });
-
-const makePasswordHashed = (plainPassword, salt) =>
-    new Promise(async (resolve, reject) => {
-        crypto.pbkdf2(plainPassword, salt, 9999, 64, 'sha512', (err, key) => {
-          if (err) reject(err);
-          resolve(key.toString('base64'));
-        });
-    });
-
 async function login(userId, plainPassword) {
     if (!userId || !plainPassword) return false
     const user = await User.findOne({ userId: userId }, [ "salt", "password", "userId", "name", "jumin", "cellphone", "email", "face", "color"]).exec()
     //console.log(user)
     if (!user) return false
-    const password = await makePasswordHashed(plainPassword, user.salt)
+    const password = await util.makePasswordHashed(plainPassword, user.salt)
     if (password === user.password) return {
         _id: user._id,
         userId: user.userId,
@@ -57,8 +32,8 @@ async function login(userId, plainPassword) {
 }
 
 const getPassword = async plainPassword => {
-    const salt = await createSalt()
-    const passwordHashed = await makePasswordHashed(plainPassword, salt)
+    const salt = await util.createSalt()
+    const passwordHashed = await util.makePasswordHashed(plainPassword, salt)
     return {
         salt: salt,
         password: passwordHashed
@@ -81,7 +56,7 @@ router.post('/login', async (req, res) => {
 
         if (!loggedUser) throw new Error("UNCORRECTED_ID")
         
-        const password = await makePasswordHashed(plainPassword, loggedUser.salt)
+        const password = await util.makePasswordHashed(plainPassword, loggedUser.salt)
     
         if (password !== loggedUser.password) throw new Error("UNCORRECTED_PASSWORD")
     
@@ -233,9 +208,9 @@ router.post("/new", encryptJumin, util.wrapAsync(async (req, res) => {
 
     const { body: { user } } = req
 
-    const salt = await createSalt()
+    const salt = await util.createSalt()
 
-    const password = await makePasswordHashed(user.password, salt)
+    const password = await util.makePasswordHashed(user.password, salt)
 
     const now = new Date()
     //console.log("now", now)

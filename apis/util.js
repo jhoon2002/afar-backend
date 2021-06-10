@@ -60,3 +60,46 @@ module.exports.wrapAsync = function(fn) {
         fn(req, res, next).catch(next)
     }
 }
+
+module.exports.createToken = function(_id) {
+    // jwt.sign는 콜백 함수를 전달하지 않으면 synchronous (return token String),
+    // 전달하면 asynchronous(return Promise) => 이때 error는 콜백함수로 전달
+    return jwt.sign(
+        {
+            _id: _id
+        },
+        key,
+        {
+            expiresIn: expiredInterval,
+            issuer: 'K-Aco'
+            //subject: '사용자 토큰'
+        })
+}
+
+module.exports.createSalt = function() {
+    new Promise((resolve, reject) => {
+        crypto.randomBytes(64, (err, buf) => {
+            if (err) reject(err)
+            resolve(buf.toString('base64'))
+        })
+    })
+}
+
+/*module.exports.createHashedPassword = function(plainPassword) {
+    return new Promise(async (resolve, reject) => {
+        const salt = await createSalt()
+        crypto.pbkdf2(plainPassword, salt, 9999, 64, 'sha512', (err, key) => {
+            if (err) reject(err)
+            resolve({password: key.toString('base64'), salt});
+        })
+    })
+}*/
+
+module.exports.makePasswordHashed = function(plainPassword, salt) {
+    return new Promise(async (resolve, reject) => {
+        crypto.pbkdf2(plainPassword, salt, 9999, 64, 'sha512', (err, key) => {
+            if (err) reject(err);
+            resolve(key.toString('base64'));
+        })
+    })
+}

@@ -1,20 +1,21 @@
-let createError = require('http-errors')
-let express = require('express')
-let path = require('path')
-let cookieParser = require('cookie-parser')
-let logger = require('morgan')
+const createError = require('http-errors')
+const express = require('express')
+const path = require('path')
+const cookieParser = require('cookie-parser')
+const logger = require('morgan')
 // const cors = require('cors')
 const jwt = require('jsonwebtoken')
 
-let indexRouter = require('./routes/index')
-let usersRouter = require('./routes/users')
-let postsRouter = require('./routes/posts')
-let organsRouter = require('./routes/organs')
+const indexRouter = require('./routes/index')
+const usersRouter = require('./routes/users')
+const postsRouter = require('./routes/posts')
+const organsRouter = require('./routes/organs')
+const testsRouter = require('./routes/tests')
 
 // mongodb 연결
 require("./connection.js")
 
-let app = express()
+const app = express()
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
@@ -33,6 +34,7 @@ app.use('/', indexRouter)
 app.use('/api/users', usersRouter)
 app.use("/api/posts", postsRouter)
 app.use("/api/organs", organsRouter)
+app.use("/api/tests", testsRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

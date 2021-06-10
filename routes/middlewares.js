@@ -2,9 +2,13 @@ const jwt = require('jsonwebtoken')
 const moment = require("moment")
 const { NoTokenError } = require("../classes/errors.js")
 const crypto = require('crypto')
+const util = require("../apis/util.js")
 
 //토큰 key
 const key = "U-Koz56^--Yui"
+
+//주민등록번호 뒤6자리 암호화 password
+const encryptPassword = "T-hoek^r--%%-wy"
 
 /*
  * 토큰 기간
@@ -34,20 +38,6 @@ jwt 시간단위가 vue-cookies와 다름에 유의
 시간(h), 분(min), 초(s), 월(m)
  */
 
-module.exports.createToken = function(_id) {
-    // jwt.sign는 콜백 함수를 전달하지 않으면 synchronous (return token String),
-    // 전달하면 asynchronous(return Promise) => 이때 error는 콜백함수로 전달
-    return jwt.sign(
-        {
-            _id: _id
-        },
-        key,
-        {
-            expiresIn: expiredInterval,
-            issuer: 'K-Aco'
-            //subject: '사용자 토큰'
-        })
-}
 
 module.exports.verifyToken = (req, res, next) => {
 
@@ -101,7 +91,7 @@ module.exports.verifyToken = (req, res, next) => {
 
     // '(3)updateInterval'에 해당하는 경우: 토큰 재발급
     if (moment(new Date().getTime()) > moment(exp * 1000).add(updateIntervalNumber, intervalUnit)) {
-        const newToken = module.exports.createToken(_id)
+        const newToken = util.createToken(_id)
         res.set('verified-token', newToken)
         console.log("\x1b[33m ..(regen)", new Date(), new Date().getTime())
         return next()
@@ -113,32 +103,35 @@ module.exports.verifyToken = (req, res, next) => {
 
 }
 
-module.exports.encryptJumin = (req, res, next) => {
+module.exports.encryptJumin = async (req, res, next) => {
 
-    try {
-        const iv = crypto.randomBytes(16)
-        const key = crypto.scryptSync(req.user.jumin3, req.user.salt, 24)
-        const cipher = crypto.createCipheriv('aes-256-cbc', key, iv)
-        let encrypted = cipher.update(req.jumin3)
-        encrypted = Buffer.concat([encrypted, cipher.final()])
+    const salt = await util.createSalt()
+    const iv = crypto.randomBytes(16)
 
-        req.encryptedJumin3 = iv.toString('hex') + ':' + encrypted.toString('hex')
+    console.log("req.query.j:", req.query.j, "salt:", salt)
+    const encryptKey = crypto.scryptSync(encryptPassword, salt, 24)
 
-        console.log(req.encryptedJumin3)
+    console.log("encryptKey", encryptKey)
 
-        // let textParts = req.user.encryptedJumin3.split(':')
-        // let iv2 = Buffer.from(textParts.shift(), 'hex')
-        // let encryptedText = Buffer.from(textParts.join(':'), 'hex')
-        // let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv2)
-        // let decrypted = decipher.update(encryptedText)
-        //
-        // decrypted = Buffer.concat([decrypted, decipher.final()])
-        //
-        // console.log(decrypted.toString())
+    const cipher = crypto.createCipheriv('aes-192-cbc', encryptKey, iv)
+    let encrypted = cipher.update(req.query.j)
+    encrypted = Buffer.concat([encrypted, cipher.final()])
 
-    } catch(e) {
-        console.log(e)
-    }
+    req.jumin3Encrypted = iv.toString('hex') + ':' + encrypted.toString('hex')
+
+    console.log("req.jumin3Encrypted(최종):", req.jumin3Encrypted)
+
+    let textParts = req.jumin3Encrypted.split(':')
+    let iv2 = Buffer.from(textParts.shift(), 'hex')
+    let encryptedText = Buffer.from(textParts.join(':'), 'hex')
+    let decipher = crypto.createDecipheriv('aes-192-cbc', encryptKey, iv2)
+    let decrypted = decipher.update(encryptedText)
+
+    decrypted = Buffer.concat([decrypted, decipher.final()])
+
+    req.jumin3Decrypted = decrypted.toString()
+    console.log("req.jumin3Decrypted(최종):", decrypted.toString())
+
 
     return next()
 

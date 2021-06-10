@@ -9,7 +9,7 @@ const moment = require("moment")
 const util = require("../apis/util.js")
 const fs = require('fs')
 const path = require('path')
-const { verifyToken, createToken } = require('./middlewares')
+const { verifyToken, createToken, encryptJumin } = require('./middlewares')
 const { NoDataError, TokenError } = require('../classes/errors.js')
 
 const createSalt = () =>
@@ -229,55 +229,48 @@ router.put("/:id", verifyToken, async (req, res) => {
 })
 
 //사용자 정보를 받아 새로운 사용자 저장
-router.post("/new", async (req, res) => {
+router.post("/new", encryptJumin, util.wrapAsync(async (req, res) => {
 
     const { body: { user } } = req
 
-    try {
+    const salt = await createSalt()
 
-        const salt = await createSalt()
+    const password = await makePasswordHashed(user.password, salt)
 
-        const password = await makePasswordHashed(user.password, salt)
+    const now = new Date()
+    //console.log("now", now)
 
-        const now = new Date()
-        //console.log("now", now)
-
-        //db에 저장되는 필드 순서를 감안하여 일일히 나열함
-        const savedUser = await User.create({
-            _id: new mongoose.Types.ObjectId(),
-            userId: user.userId,
-            password: password,
-            salt: salt,
-            name: user.name,
-            jumin: user.jumin,
-            cellphone: user.cellphone,
-            email: user.email,
-            face: user.face,
-            color: user.color,
-            agree: {
-                terms: user.agree.terms,
-                info: user.agree.info,
-                jumin: user.agree.jumin,
-                email: user.agree.email,
-                sms: user.agree.sms
-            },
-            created: now,
-            updated: now
-        })
-        // console.log("user.created", user.created)
-        return res.status(200).json({
-            status: 200,
-            msg: "생성 완료",
-            user: savedUser
-        })
-    } catch(e) {
-        console.log(e)
-        return res.status(304).json({
-            status: 304,
-            msg: "생성 못함"
-        })
-    }
-})
+    //db에 저장되는 필드 순서를 감안하여 일일히 나열함
+    const savedUser = await User.create({
+        _id: new mongoose.Types.ObjectId(),
+        userId: user.userId,
+        password: password,
+        salt: salt,
+        name: user.name,
+        jumin1: user.jumin1,
+        jumin2: user.jumin2,
+        jumin3: user.encryptedJumin3,
+        cellphone: user.cellphone,
+        email: user.email,
+        face: user.face,
+        color: user.color,
+        agree: {
+            terms: user.agree.terms,
+            info: user.agree.info,
+            jumin: user.agree.jumin,
+            email: user.agree.email,
+            sms: user.agree.sms
+        },
+        created: now,
+        updated: now
+    })
+    // console.log("user.created", user.created)
+    return res.status(200).json({
+        status: 200,
+        msg: "생성 완료",
+        user: savedUser
+    })
+}))
 
 // todo: 사용 안하는 듯하니 향후 확인 필요
 router.post("/", verifyToken, async (req, res) => {
@@ -445,4 +438,12 @@ router.get("/jumin/:jumin", util.wrapAsync(async (req, res) => {
 
 }))
 
+router.get("/test", encryptJumin, (req, res) => {
+    console.log(req.query)
+    return res.status(200).json({
+        j: req.query.j,
+        encryptedJumin3: req.encryptedJumin3,
+        jumin3: req.jumin3
+    })
+})
 module.exports = router

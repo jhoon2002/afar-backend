@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const moment = require("moment")
 const { NoTokenError } = require("../classes/errors.js")
+const crypto = require('crypto')
 
 //토큰 key
 const key = "U-Koz56^--Yui"
@@ -108,6 +109,37 @@ module.exports.verifyToken = (req, res, next) => {
 
     // '(2)기간'에 해당하는 경우
     console.log("\x1b[34m ..(OK)", new Date(), new Date().getTime())
+    return next()
+
+}
+
+module.exports.encryptJumin = (req, res, next) => {
+
+    try {
+        const iv = crypto.randomBytes(16)
+        const key = crypto.scryptSync(req.user.jumin3, req.user.salt, 24)
+        const cipher = crypto.createCipheriv('aes-256-cbc', key, iv)
+        let encrypted = cipher.update(req.jumin3)
+        encrypted = Buffer.concat([encrypted, cipher.final()])
+
+        req.encryptedJumin3 = iv.toString('hex') + ':' + encrypted.toString('hex')
+
+        console.log(req.encryptedJumin3)
+
+        // let textParts = req.user.encryptedJumin3.split(':')
+        // let iv2 = Buffer.from(textParts.shift(), 'hex')
+        // let encryptedText = Buffer.from(textParts.join(':'), 'hex')
+        // let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv2)
+        // let decrypted = decipher.update(encryptedText)
+        //
+        // decrypted = Buffer.concat([decrypted, decipher.final()])
+        //
+        // console.log(decrypted.toString())
+
+    } catch(e) {
+        console.log(e)
+    }
+
     return next()
 
 }

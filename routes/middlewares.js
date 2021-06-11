@@ -104,14 +104,15 @@ module.exports.verifyToken = (req, res, next) => {
 }
 
 module.exports.encryptJumin = async (req, res, next) => {
-
+    
+    // 암호화
     const salt = await util.createSalt()
     const iv = crypto.randomBytes(16)
 
-    console.log("req.query.j:", req.query.j, "salt:", salt)
+    //console.log("req.query.j:", req.query.j, "salt:", salt)
     const encryptKey = crypto.scryptSync(encryptPassword, salt, 24)
 
-    console.log("encryptKey", encryptKey)
+    //console.log("encryptKey", encryptKey)
 
     const cipher = crypto.createCipheriv('aes-192-cbc', encryptKey, iv)
     let encrypted = cipher.update(req.query.j)
@@ -119,8 +120,9 @@ module.exports.encryptJumin = async (req, res, next) => {
 
     req.jumin3Encrypted = iv.toString('hex') + ':' + encrypted.toString('hex')
 
-    console.log("req.jumin3Encrypted(최종):", req.jumin3Encrypted)
+    //console.log("req.jumin3Encrypted(최종):", req.jumin3Encrypted)
 
+    // 복호화
     let textParts = req.jumin3Encrypted.split(':')
     let iv2 = Buffer.from(textParts.shift(), 'hex')
     let encryptedText = Buffer.from(textParts.join(':'), 'hex')
@@ -130,8 +132,7 @@ module.exports.encryptJumin = async (req, res, next) => {
     decrypted = Buffer.concat([decrypted, decipher.final()])
 
     req.jumin3Decrypted = decrypted.toString()
-    console.log("req.jumin3Decrypted(최종):", decrypted.toString())
-
+    //console.log("req.jumin3Decrypted(최종):", decrypted.toString())
 
     return next()
 

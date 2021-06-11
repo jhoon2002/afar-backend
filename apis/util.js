@@ -1,3 +1,5 @@
+const crypto = require('crypto')
+
 module.exports.toPayload = function(queryStringObj) {
 
     let qso = queryStringObj
@@ -77,7 +79,7 @@ module.exports.createToken = function(_id) {
 }
 
 module.exports.createSalt = function() {
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         crypto.randomBytes(64, (err, buf) => {
             if (err) reject(err)
             resolve(buf.toString('base64'))
@@ -102,4 +104,27 @@ module.exports.makePasswordHashed = function(plainPassword, salt) {
             resolve(key.toString('base64'));
         })
     })
+}
+
+module.exports.undirectEncrypt = function (target, salt) {
+
+}
+
+// 양방향 암호화
+module.exports.bidirectEncrypt = function (target, salt) {
+
+    const iv = crypto.randomBytes(16)
+
+    //console.log("req.query.j:", req.query.j, "salt:", salt)
+    const encryptKey = crypto.scryptSync(encryptPassword, salt, 24)
+
+    //console.log("encryptKey", encryptKey)
+
+    const cipher = crypto.createCipheriv('aes-192-cbc', encryptKey, iv)
+    let encrypted = cipher.update(req.query.j)
+    encrypted = Buffer.concat([encrypted, cipher.final()])
+
+    req.jumin3Encrypted = iv.toString('hex') + ':' + encrypted.toString('hex')
+
+    //console.log("req.jumin3Encrypted(최종):", req.jumin3Encrypted)
 }

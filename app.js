@@ -54,20 +54,19 @@ app.use(function (error, req, res, next) {
         return res.status(400).json({
             status: 400,
             type: "NO_DATA",
-            msg: error.message,
+            msg: error.message
         })
     }
     next(error)
 })
 
-// NO 토큰 에러
+// 일반 에러: 400
 app.use(function (error, req, res, next) {
-    if (error instanceof Errors.NoTokenError) {
+    if (error instanceof Errors.PlainError) {
         console.log(error)
         return res.status(400).json({
             status: 400,
-            type: "DELETE_REQUIRED",
-            msg: error.message,
+            msg: error.message
         })
     }
     next(error)
@@ -83,7 +82,7 @@ app.use(function (error, req, res, next) {
         return res.status(419).json({
             status: 419,
             type: "DELETE_REQUIRED",
-            msg: error.message,
+            msg: error.message
         })
     }
     if ( error instanceof jwt.JsonWebTokenError
@@ -92,7 +91,7 @@ app.use(function (error, req, res, next) {
         return res.status(401).json({
             status: 401,
             type: "DELETE_REQUIRED",
-            msg: error.message,
+            msg: error.message
         })
     }
     next(error)
@@ -111,6 +110,7 @@ app.use(function (error, req, res, next) {
 
 // 나머지 에러
 app.use(function(err, req, res, next) {
+    console.log(err)
     // set locals, only providing error in development
     res.locals.message = err.message
     res.locals.error = req.app.get('env') === 'development' ? err : {}

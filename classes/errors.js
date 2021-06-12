@@ -6,15 +6,15 @@ class NoDataError extends Error {
     }
 }
 
-// 토큰이 front 넘오지 않은 경우
-class NoTokenError extends Error {
+// 일반 에러: response 400
+class PlainError extends Error {
     constructor(message) {
         super(message)
-        this.name = "NoTokenError"
+        this.name = "PlainError"
     }
 }
 
 module.exports = {
     NoDataError: NoDataError,
-    NoTokenError: NoTokenError
+    PlainError: PlainError
 }

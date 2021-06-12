@@ -1,4 +1,6 @@
 const crypto = require('crypto')
+const jwt = require('jsonwebtoken')
+const { TOKEN_KEY, TOKEN_EXPIRE, TOKEN_ISSUER } = require("../config.js")
 
 module.exports.toPayload = function(queryStringObj) {
 
@@ -70,10 +72,10 @@ module.exports.createToken = function(_id) {
         {
             _id: _id
         },
-        key,
+        TOKEN_KEY,
         {
-            expiresIn: expiredInterval,
-            issuer: 'K-Aco'
+            expiresIn: TOKEN_EXPIRE,
+            issuer: TOKEN_ISSUER
             //subject: '사용자 토큰'
         })
 }
@@ -107,24 +109,37 @@ module.exports.makePasswordHashed = function(plainPassword, salt) {
 }
 
 module.exports.undirectEncrypt = function (target, salt) {
-
+    return new Promise(async (resolve, reject) => {
+        crypto.pbkdf2(target, salt, 9999, 64, 'sha512', (err, key) => {
+            if (err) reject(err);
+            resolve(key.toString('base64'));
+        })
+    })
 }
 
 // 양방향 암호화
-module.exports.bidirectEncrypt = function (target, salt) {
+module.exports.bidirectEncrypt = function (target, salt, password) {
 
     const iv = crypto.randomBytes(16)
+    const key = crypto.scryptSync( password , salt , 24)
 
-    //console.log("req.query.j:", req.query.j, "salt:", salt)
-    const encryptKey = crypto.scryptSync(encryptPassword, salt, 24)
-
-    //console.log("encryptKey", encryptKey)
-
-    const cipher = crypto.createCipheriv('aes-192-cbc', encryptKey, iv)
-    let encrypted = cipher.update(req.query.j)
+    const cipher = crypto.createCipheriv('aes-192-cbc', key, iv)
+    let encrypted = cipher.update( target )
     encrypted = Buffer.concat([encrypted, cipher.final()])
 
-    req.jumin3Encrypted = iv.toString('hex') + ':' + encrypted.toString('hex')
+    return iv.toString('hex') + ':' + encrypted.toString('hex')
+}
 
-    //console.log("req.jumin3Encrypted(최종):", req.jumin3Encrypted)
+// 양방향 복호화
+module.exports.bidirectDecrypt = function (target, salt, password) {
+
+    const textParts = target.split(':')
+    const iv = Buffer.from(textParts.shift(), 'hex')
+    const key = crypto.scryptSync(password , salt , 24)
+    const encryptedText = Buffer.from(textParts.join(':'), 'hex')
+    const decipher = crypto.createDecipheriv('aes-192-cbc', key, iv)
+    let decrypted = decipher.update(encryptedText)
+    decrypted = Buffer.concat([decrypted, decipher.final()])
+
+    return decrypted.toString()
 }

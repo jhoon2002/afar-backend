@@ -6,18 +6,18 @@ const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const moment = require("moment")
 // const { toPayload } = require("../apis/util.js")
-const util = require("../apis/util.js")
+const { wrapAsync, makePasswordHashed, createSalt, toPayload, createToken } = require("../apis/util.js")
 const fs = require('fs')
 const path = require('path')
-const { verifyToken, createToken, encryptJumin } = require('./middlewares')
-const { NoDataError, TokenError } = require('../classes/errors.js')
+const { verifyToken, encryptPassword, encryptJumin } = require('./middlewares')
+const { NoDataError, TokenError, PlainError } = require('../classes/errors.js')
 
 async function login(userId, plainPassword) {
     if (!userId || !plainPassword) return false
     const user = await User.findOne({ userId: userId }, [ "salt", "password", "userId", "name", "jumin", "cellphone", "email", "face", "color"]).exec()
     //console.log(user)
     if (!user) return false
-    const password = await util.makePasswordHashed(plainPassword, user.salt)
+    const password = await makePasswordHashed(plainPassword, user.salt)
     if (password === user.password) return {
         _id: user._id,
         userId: user.userId,
@@ -32,8 +32,8 @@ async function login(userId, plainPassword) {
 }
 
 const getPassword = async plainPassword => {
-    const salt = await util.createSalt()
-    const passwordHashed = await util.makePasswordHashed(plainPassword, salt)
+    const salt = await createSalt()
+    const passwordHashed = await makePasswordHashed(plainPassword, salt)
     return {
         salt: salt,
         password: passwordHashed
@@ -41,24 +41,24 @@ const getPassword = async plainPassword => {
 }
 
 // 사용자 id 와 비밀번호를 받아...
-router.post('/login', async (req, res) => {
+router.post('/login', wrapAsync(async (req, res) => {
 
     const { userId, password: plainPassword } = req.body
 
-    try {
+    // try {
     
-        if (!userId || !plainPassword) throw new Error("NO_ID_PASSWORD")
+        if (!userId || !plainPassword) throw new PlainError("아이디 또는 비밀번호가 없음")
         
         const loggedUser = await User.findOne(
             { userId: userId },
             [ "salt", "password", "userId", "name", "jumin", "cellphone", "email", "face", "color"]
         ).exec()
 
-        if (!loggedUser) throw new Error("UNCORRECTED_ID")
+        if (!loggedUser) throw new PlainError("아이디 또는 비밀번호가 일치하지 않음")
         
-        const password = await util.makePasswordHashed(plainPassword, loggedUser.salt)
+        const password = await makePasswordHashed(plainPassword, loggedUser.salt)
     
-        if (password !== loggedUser.password) throw new Error("UNCORRECTED_PASSWORD")
+        if (password !== loggedUser.password) throw new PlainError("아이디 또는 비밀번호가 일치하지 않음")
     
         const token = await createToken(loggedUser._id)
         console.log("생성", new Date())
@@ -71,6 +71,7 @@ router.post('/login', async (req, res) => {
             msg: '사용자 인증 성공',
             user: loggedUser
         })
+       /*
     } catch(e) {
         console.log(e.message)
         if (e.message === "UNCORRECTED_ID" || e.message === "UNCORRECTED_PASSWORD") {
@@ -84,7 +85,8 @@ router.post('/login', async (req, res) => {
             "msg": '기타 사유로 예외 발생'
         })
     }
-})
+    */
+}))
 
 //헤더로 토큰을 받아 검사 결과를 status 와 data.type data.msg 등으로 반환
 router.get('/check-token', verifyToken, async (req, res) => {
@@ -106,7 +108,7 @@ router.get('/check-token', verifyToken, async (req, res) => {
 
 //검색 내역을 받아 카운트와 사용자 배열을 반환
 router.get('/', verifyToken, async function (req, res) {
-    const payload = util.toPayload({
+    const payload = toPayload({
         filt: {
             // boardId: req.query["search.boardId"] //이 라인을 search: 으로 이동시키면 front에서 게시판 명을 검색 옵션으로 사용 가능할 듯
         },
@@ -171,7 +173,7 @@ router.post('/is-userid', async (req, res) => {
 })
 
 // todo: 향후 삭제 요망
-// router.post('/is-jumin', util.wrapAsync(async (req, res) => {
+// router.post('/is-jumin', wrapAsync(async (req, res) => {
 //     const user = await User.findOne({ jumin: req.body.jumin }, { userId: 1, jumin: 1, cellphone: 1 })
 //
 //     // 검색 결과, 해당 사용자가 없을 경우 user === null 이 됨
@@ -204,13 +206,17 @@ router.put("/:id", verifyToken, async (req, res) => {
 })
 
 //사용자 정보를 받아 새로운 사용자 저장
-router.post("/new", encryptJumin, util.wrapAsync(async (req, res) => {
+router.post("/new",
+            wrapAsync(encryptPassword),
+            wrapAsync(encryptJumin),
+            wrapAsync(async (req, res) => {
 
     const { body: { user } } = req
 
-    const salt = await util.createSalt()
+    // const salt = await createSalt()
+    // const password = await makePasswordHashed(user.password, salt)
 
-    const password = await util.makePasswordHashed(user.password, salt)
+    // console.log("user", user)
 
     const now = new Date()
     //console.log("now", now)
@@ -219,12 +225,12 @@ router.post("/new", encryptJumin, util.wrapAsync(async (req, res) => {
     const savedUser = await User.create({
         _id: new mongoose.Types.ObjectId(),
         userId: user.userId,
-        password: password,
-        salt: salt,
+        password: user.passwordEncrypted,
+        salt: user.salt,
         name: user.name,
         jumin1: user.jumin1,
         jumin2: user.jumin2,
-        jumin3: user.encryptedJumin3,
+        jumin3: user.jumin3Encrypted,
         cellphone: user.cellphone,
         email: user.email,
         face: user.face,
@@ -397,7 +403,7 @@ router.get('/_id/:by', verifyToken, async (req, res) => {
 })
 
 //주민번호를 받아서 해당 사용자를 반환
-router.get("/jumin/:jumin", util.wrapAsync(async (req, res) => {
+router.get("/jumin/:jumin", wrapAsync(async (req, res) => {
 
     const { jumin } = req.params
 

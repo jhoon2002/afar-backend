@@ -2,9 +2,10 @@ const express = require('express')
 const router = express.Router()
 const crypto = require('crypto')
 const { encryptJumin } = require('./middlewares')
+const { wrapAsync } = require("../apis/util.js")
 
 
-router.get("/some", encryptJumin, (req, res) => {
+router.get("/some", wrapAsync(encryptJumin), wrapAsync( (req, res) => {
 
     console.log(req.query)
 
@@ -15,6 +16,6 @@ router.get("/some", encryptJumin, (req, res) => {
         jumin3Encrypted: req.jumin3Encrypted,
         jumin3Decrypted: req.jumin3Decrypted
     })
-})
+}))
 
 module.exports = router

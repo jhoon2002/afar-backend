@@ -28,7 +28,7 @@ module.exports.verifyToken = (req, res, next) => {
 
     const { token } = req.headers
 
-    //req에 토큰 자체가 없는 경우
+    //req 에 토큰 자체가 없는 경우
     if (!token || token === "null") {
         //res.set("verified-token", "")
         console.log("\x1b[30m ..(error 400)", "Bad token(no token)")

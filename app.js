@@ -7,10 +7,15 @@ const logger = require('morgan')
 const jwt = require('jsonwebtoken')
 
 const indexRouter = require('./routes/index')
+const tokenRouter = require('./routes/token')
 const usersRouter = require('./routes/users')
 const postsRouter = require('./routes/posts')
 const organsRouter = require('./routes/organs')
 const testsRouter = require('./routes/tests')
+const filesRouter = require('./routes/files')
+const multer = require('multer')
+const mongoose = require('mongoose')
+const Errors = require('./classes/errors.js')
 
 // mongodb 연결
 require("./connection.js")
@@ -31,38 +36,26 @@ app.use(express.static(path.join(__dirname, 'public')))
 // }))
 
 app.use('/', indexRouter)
+app.use('/api/token', tokenRouter)
 app.use('/api/users', usersRouter)
 app.use("/api/posts", postsRouter)
 app.use("/api/organs", organsRouter)
 app.use("/api/tests", testsRouter)
+app.use('/api/files', filesRouter)
+
+/*
+ * 이하 Error handler
+ */
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404))
 })
 
-
-/*
- * 이하 Error handler
- */
-const Errors = require('./classes/errors.js')
-
-// NoDataError: 400
-app.use(function (error, req, res, next) {
-    if (error instanceof Errors.NoDataError) {
-        console.log(error)
-        return res.status(400).json({
-            status: 400,
-            type: "NO_DATA",
-            msg: error.message
-        })
-    }
-    next(error)
-})
-
 // 일반 에러: 400
 app.use(function (error, req, res, next) {
-    if (error instanceof Errors.PlainError) {
+    if (error instanceof Errors.PlainError
+        || error instanceof Errors.NoDataError) {
         console.log(error)
         return res.status(400).json({
             status: 400,
@@ -97,16 +90,29 @@ app.use(function (error, req, res, next) {
     next(error)
 })
 
-// 모든 Mongo DB 상의 에러는 503으로
-// app.use(function handleDatabaseError(error, req, res, next) {
-//   if (error instanceof MongoError) {
-//     res.status(503).json({
-//       type: "MongoError",
-//       message: error.message,
-//     })
-//   }
-//   next(error)
-// })
+// 모든 Mongoose 에러
+app.use(function (error, req, res, next) {
+    if (error instanceof mongoose.Error) {
+        console.log(error)
+        res.status(503).json({
+            status: 503,
+            message: error.message
+        })
+    }
+    next(error)
+})
+
+//multer 에러
+app.use(function (error, req, res, next) {
+    if (error instanceof multer.MulterError) {
+        console.log(error)
+        return res.status(400).json({
+            status: 400,
+            msg: error.message
+        })
+    }
+    next(error)
+})
 
 // 나머지 에러
 app.use(function(err, req, res, next) {
